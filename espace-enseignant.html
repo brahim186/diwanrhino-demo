@@ -1,0 +1,486 @@
+<!DOCTYPE html>
+<html lang="fr" dir="ltr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Espace Enseignant | Diwan Al Maaref</title>
+<meta name="robots" content="noindex, nofollow">
+<link rel="icon" type="image/png" href="logo.png">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800&family=Fraunces:wght@500;600&family=Manrope:wght@500;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+<script src="https://cdn.tailwindcss.com"></script>
+<script>
+  tailwind.config = {
+    theme: {
+      extend: {
+        colors: {
+          navy:  { DEFAULT:'#1B1464', 700:'#170F52', 900:'#100B3B' },
+          purple:{ DEFAULT:'#5B3AA6' },
+          gold:  { DEFAULT:'#F0A93C', light:'#FBC873', dark:'#D98F1F' },
+          ink:   '#221D3D', mist:'#F6F4FC', line:'#E7E2F3',
+        },
+        fontFamily: { sans: ['Inter','sans-serif'], display: ['Fraunces','serif'] }
+      }
+    }
+  }
+</script>
+
+<style>
+  body { font-family:'Inter', sans-serif; color:#221D3D; background:#F6F4FC; }
+  .font-display { font-family:'Fraunces', serif; }
+  .num { font-family:'Manrope', sans-serif; }
+  a:focus-visible, button:focus-visible, select:focus-visible { outline: 2px solid #F0A93C; outline-offset: 2px; border-radius: 6px; }
+  .row-enter { animation: rowEnter .35s cubic-bezier(.2,.8,.25,1) both; }
+  @keyframes rowEnter { from{opacity:0;transform:translateY(-6px)} to{opacity:1;transform:translateY(0)} }
+
+  .plain-select {
+    appearance: none; -webkit-appearance: none;
+    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 24 24' fill='none'><path d='M6 9l6 6 6-6' stroke='%235B3AA6' stroke-width='2.2' stroke-linecap='round' stroke-linejoin='round'/></svg>");
+    background-repeat: no-repeat; background-position: right .9rem center;
+  }
+
+  .attendance-pill { transition: background-color .15s ease, color .15s ease, border-color .15s ease; }
+  .att-present.active { background:#D1FAE5; color:#047857; border-color:#A7F3D0; }
+  .att-absent.active  { background:#FDECEE; color:#BE123C; border-color:#FBD5DA; }
+  .att-late.active    { background:#FEF3C7; color:#B45309; border-color:#FDE68A; }
+  .attendance-pill:not(.active) { background:#F6F4FC; color:#9CA3AF; border-color:#E7E2F3; }
+
+  .toast { animation: toastIn .3s ease both, toastOut .3s ease 1.7s both; }
+  @keyframes toastIn { from{opacity:0;transform:translateY(10px)} to{opacity:1;transform:translateY(0)} }
+  @keyframes toastOut { from{opacity:1} to{opacity:0;transform:translateY(-6px)} }
+</style>
+</head>
+
+<body class="antialiased min-h-screen">
+
+<header class="sticky top-0 z-30 bg-white/95 backdrop-blur border-b border-line">
+  <div class="max-w-6xl mx-auto px-5 sm:px-8 h-20 flex items-center justify-between gap-4">
+    <div class="flex items-center gap-3">
+      <img src="logo.png" alt="Logo Diwan Al Maaref" class="h-11 w-11 object-contain">
+      <div class="hidden sm:flex flex-col leading-tight">
+        <span class="font-display font-semibold text-navy text-base">Espace Enseignant</span>
+        <span class="text-[11px] text-gold-dark font-bold">Diwan Al Maaref</span>
+      </div>
+    </div>
+    <div class="flex items-center gap-3">
+      <a href="saisie-notes.html" class="inline-flex items-center gap-2 text-xs font-bold text-navy/70 hover:text-gold-dark border border-line rounded-full px-4 py-2.5 transition-colors bg-white">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M9 12h6M9 16h6M9 8h6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/><path d="M4 19V6a2 2 0 012-2h9l5 5v10a2 2 0 01-2 2H6a2 2 0 01-2-2z" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/></svg>
+        <span class="hidden sm:inline">Saisie des notes</span>
+      </a>
+      <button id="logoutBtn" type="button" class="inline-flex items-center gap-2 text-xs font-bold text-rose-600 hover:text-white hover:bg-rose-600 border border-rose-200 rounded-full px-4 py-2.5 transition-colors bg-rose-50">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4M16 17l5-5-5-5M21 12H9" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        <span class="hidden sm:inline">Déconnexion</span>
+      </button>
+    </div>
+  </div>
+</header>
+
+<main class="max-w-6xl mx-auto px-5 sm:px-8 py-12 flex flex-col gap-8">
+
+  <div>
+    <h2 id="welcomeTitle" class="font-display font-semibold text-navy text-3xl">Bonjour</h2>
+    <p class="text-ink/50 text-sm mt-2">Voici un aperçu de votre profil et de vos élèves.</p>
+  </div>
+
+  <section class="grid sm:grid-cols-2 lg:grid-cols-4 gap-4">
+    <div class="bg-white border border-line rounded-2xl p-5">
+      <p class="text-[11px] font-extrabold uppercase tracking-wide text-ink/40 mb-1.5">Genre</p>
+      <p id="infoGenre" class="font-bold text-navy text-sm">—</p>
+    </div>
+    <div class="bg-white border border-line rounded-2xl p-5">
+      <p class="text-[11px] font-extrabold uppercase tracking-wide text-ink/40 mb-1.5">Téléphone</p>
+      <p id="infoTelephone" class="font-bold text-navy text-sm">—</p>
+    </div>
+    <div class="bg-white border border-line rounded-2xl p-5">
+      <p class="text-[11px] font-extrabold uppercase tracking-wide text-ink/40 mb-1.5">Adresse</p>
+      <p id="infoAdresse" class="font-bold text-navy text-sm truncate">—</p>
+    </div>
+    <div class="bg-white border border-line rounded-2xl p-5">
+      <p class="text-[11px] font-extrabold uppercase tracking-wide text-ink/40 mb-1.5">Groupe</p>
+      <p id="infoGroupe" class="font-bold text-navy text-sm">—</p>
+    </div>
+  </section>
+
+  <section class="bg-white border border-line rounded-3xl p-6 sm:p-8 shadow-sm">
+    <h3 class="font-display font-semibold text-navy text-lg mb-4">Mes classes</h3>
+    <div id="classesWrap" class="flex flex-wrap gap-2"></div>
+  </section>
+
+  <!-- ============================= PRISE DES PRÉSENCES ============================= -->
+  <section class="bg-white border border-line rounded-3xl shadow-sm p-6 sm:p-8 flex flex-col gap-6">
+    <div>
+      <h3 class="font-display font-semibold text-navy text-lg">Prise des Présences</h3>
+      <p class="text-ink/50 text-sm mt-1">Sélectionnez la classe et l'horaire de la séance, puis marquez la présence de chaque élève.</p>
+    </div>
+
+    <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-4">
+      <div>
+        <label class="block text-navy text-xs font-extrabold tracking-wide uppercase mb-2">Niveau</label>
+        <select id="attNiveauSelect" class="plain-select w-full rounded-2xl border border-line bg-mist pl-4 pr-9 py-3 text-sm text-navy outline-none cursor-pointer">
+          <option value="">Choisir un niveau...</option>
+        </select>
+      </div>
+      <div>
+        <label class="block text-navy text-xs font-extrabold tracking-wide uppercase mb-2">Groupe / Classe</label>
+        <select id="attGroupeSelect" disabled class="plain-select w-full rounded-2xl border border-line bg-mist pl-4 pr-9 py-3 text-sm text-navy outline-none cursor-pointer disabled:opacity-50">
+          <option value="">Choisir d'abord un niveau...</option>
+        </select>
+      </div>
+      <div>
+        <label class="block text-navy text-xs font-extrabold tracking-wide uppercase mb-2">De</label>
+        <select id="heureDebutSelect" class="plain-select w-full rounded-2xl border border-line bg-mist pl-4 pr-9 py-3 text-sm text-navy outline-none cursor-pointer"></select>
+      </div>
+      <div>
+        <label class="block text-navy text-xs font-extrabold tracking-wide uppercase mb-2">À</label>
+        <select id="heureFinSelect" class="plain-select w-full rounded-2xl border border-line bg-mist pl-4 pr-9 py-3 text-sm text-navy outline-none cursor-pointer"></select>
+      </div>
+    </div>
+
+    <div id="attendancePlaceholder" class="text-center py-10 text-ink/40 text-sm border border-dashed border-line rounded-2xl">
+      Sélectionnez un niveau puis un groupe pour afficher la liste des élèves.
+    </div>
+
+    <div id="attendanceListWrap" class="hidden flex flex-col gap-4">
+      <div class="flex items-center justify-between">
+        <span id="attendanceCount" class="text-xs font-extrabold text-navy/60 bg-mist rounded-full px-3 py-1.5">0 élève</span>
+        <div class="flex items-center gap-2">
+          <button type="button" id="markAllPresentBtn" class="text-xs font-bold text-emerald-700 hover:underline">Tout marquer "Présent"</button>
+        </div>
+      </div>
+
+      <div class="overflow-x-auto">
+        <table class="w-full text-sm">
+          <thead>
+            <tr class="text-left text-[11px] font-extrabold uppercase tracking-wide text-ink/40 bg-mist/60">
+              <th class="px-4 py-3 whitespace-nowrap">Élève</th>
+              <th class="px-4 py-3 whitespace-nowrap">Matricule</th>
+              <th class="px-4 py-3 whitespace-nowrap text-center">Présence</th>
+            </tr>
+          </thead>
+          <tbody id="attendanceTableBody" class="divide-y divide-line"></tbody>
+        </table>
+      </div>
+
+      <div class="flex justify-end">
+        <button type="button" id="saveAttendanceBtn" class="inline-flex items-center gap-2 bg-navy hover:bg-navy-700 text-white font-extrabold text-sm rounded-full px-7 py-3.5 transition-colors">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M20 6L9 17l-5-5" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          Enregistrer l'appel
+        </button>
+      </div>
+    </div>
+  </section>
+  <!-- =========================================================================== -->
+
+  <section class="bg-white border border-line rounded-3xl shadow-sm overflow-hidden">
+    <div class="px-6 sm:px-8 py-6 flex items-center justify-between border-b border-line">
+      <h3 class="font-display font-semibold text-navy text-lg">Mes élèves</h3>
+      <span id="studentCount" class="text-xs font-extrabold text-navy/60 bg-mist rounded-full px-3 py-1.5">0 élève</span>
+    </div>
+    <div class="overflow-x-auto">
+      <table class="w-full text-sm">
+        <thead>
+          <tr class="text-left text-[11px] font-extrabold uppercase tracking-wide text-ink/40 bg-mist/60">
+            <th class="px-6 sm:px-8 py-3.5 whitespace-nowrap">Nom</th>
+            <th class="px-4 py-3.5 whitespace-nowrap">Prénom</th>
+            <th class="px-4 py-3.5 whitespace-nowrap">Matricule</th>
+            <th class="px-4 py-3.5 whitespace-nowrap">Niveau</th>
+            <th class="px-4 sm:px-8 py-3.5 whitespace-nowrap">Groupe</th>
+          </tr>
+        </thead>
+        <tbody id="studentsTableBody" class="divide-y divide-line"></tbody>
+      </table>
+    </div>
+    <div id="emptyState" class="hidden px-8 py-14 text-center">
+      <p class="text-ink/40 text-sm">Aucun élève trouvé pour vos classes.</p>
+    </div>
+  </section>
+
+</main>
+
+<div id="toastWrap" class="fixed bottom-6 inset-x-0 flex justify-center pointer-events-none z-50"></div>
+
+<script type="module">
+  // -------------------------------------------------------------------------
+  // MODE DÉMO — aucune base de données réelle, données en mémoire uniquement.
+  // -------------------------------------------------------------------------
+
+  const DEMO_TEACHER = {
+    prenom: 'Amina', nom: 'Fassi', genre: 'F', telephone: '0600 11 22 33',
+    adresse: '12 Rue Ibn Sina, Kénitra', groupe: 'A', niveaux: ['CM1', 'CM2'],
+    matiere: 'Mathématiques',
+  };
+
+  const DEMO_STUDENTS = [
+    { id: 'DAM-2026-001', prenom: 'Yasmine', nom: 'El Amrani', niveau: 'CM1', groupe: 'A', statut: 'Accepté' },
+    { id: 'DAM-2026-002', prenom: 'Rayan', nom: 'Chafik', niveau: 'CM1', groupe: 'A', statut: 'Accepté' },
+    { id: 'DAM-2026-003', prenom: 'Amine', nom: 'Bouzidi', niveau: 'CM2', groupe: 'A', statut: 'Accepté' },
+    { id: 'DAM-2026-004', prenom: 'Lina', nom: 'Tazi', niveau: 'CM2', groupe: 'A', statut: 'Accepté' },
+    { id: 'DAM-2026-005', prenom: 'Adam', nom: 'Ouahbi', niveau: 'CM1', groupe: 'B', statut: 'Accepté' },
+  ];
+
+  function levelBadgeClass(lvl) {
+    const m = {
+      'Maternelle': 'bg-emerald-50 text-emerald-700 border border-emerald-200/60',
+      'Primaire':   'bg-purple/5 text-purple border border-purple/10',
+      'Collège':    'bg-gold/5 text-gold-dark border border-gold/10'
+    };
+    for (const key in m) if (lvl && lvl.includes(key)) return m[key];
+    return 'bg-mist text-ink/60';
+  }
+  const groupBadgeClass = () => 'bg-navy/5 text-navy border border-navy/10';
+
+  function showToast(message) {
+    const toastWrap = document.getElementById('toastWrap');
+    const toast = document.createElement('div');
+    toast.className = 'toast pointer-events-auto bg-navy text-white text-sm font-bold rounded-full px-6 py-3 shadow-lg flex items-center gap-2';
+    toast.innerHTML = `<svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M20 6L9 17l-5-5" stroke="#F0A93C" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>${message}`;
+    toastWrap.appendChild(toast);
+    setTimeout(() => toast.remove(), 2000);
+  }
+
+  // --- Génération des créneaux horaires (listes déroulantes "scroll") ------------------
+  function populateTimeSelect(selectEl, defaultValue) {
+    selectEl.innerHTML = '';
+    for (let h = 7; h <= 19; h++) {
+      for (let m = 0; m < 60; m += 15) {
+        if (h === 19 && m > 0) break;
+        const label = `${String(h).padStart(2, '0')}:${String(m).padStart(2, '0')}`;
+        const opt = document.createElement('option');
+        opt.value = label;
+        opt.textContent = label;
+        selectEl.appendChild(opt);
+      }
+    }
+    selectEl.value = defaultValue;
+  }
+  const heureDebutSelect = document.getElementById('heureDebutSelect');
+  const heureFinSelect = document.getElementById('heureFinSelect');
+  populateTimeSelect(heureDebutSelect, '08:30');
+  populateTimeSelect(heureFinSelect, '09:30');
+
+  let currentTeacher = null;
+  let currentUser = null;
+  let currentStudents = []; // élèves du niveau+groupe actuellement sélectionnés
+  const attendanceState = {}; // studentId -> 'Présent' | 'Absent' | 'Retard'
+
+  const attNiveauSelect = document.getElementById('attNiveauSelect');
+  const attGroupeSelect = document.getElementById('attGroupeSelect');
+  const attendancePlaceholder = document.getElementById('attendancePlaceholder');
+  const attendanceListWrap = document.getElementById('attendanceListWrap');
+  const attendanceTableBody = document.getElementById('attendanceTableBody');
+
+  function pillHtml(studentId, statut) {
+    return `
+      <div class="inline-flex rounded-full border border-line overflow-hidden text-[11px] font-extrabold" data-pills="${studentId}">
+        <button type="button" data-statut="Présent" class="attendance-pill att-present px-3 py-2 border-r border-line ${statut === 'Présent' ? 'active' : ''}">Présent</button>
+        <button type="button" data-statut="Retard" class="attendance-pill att-late px-3 py-2 border-r border-line ${statut === 'Retard' ? 'active' : ''}">Retard</button>
+        <button type="button" data-statut="Absent" class="attendance-pill att-absent px-3 py-2 ${statut === 'Absent' ? 'active' : ''}">Absent</button>
+      </div>
+    `;
+  }
+
+  function renderAttendanceList() {
+    attendanceTableBody.innerHTML = '';
+    currentStudents.forEach((s) => {
+      const tr = document.createElement('tr');
+      tr.className = 'row-enter';
+      tr.innerHTML = `
+        <td class="px-4 py-3 font-bold text-navy whitespace-nowrap">${s.prenom || ''} ${s.nom || ''}</td>
+        <td class="px-4 py-3 whitespace-nowrap font-mono text-xs font-bold text-purple">${s.id}</td>
+        <td class="px-4 py-3 text-center">${pillHtml(s.id, attendanceState[s.id] || 'Présent')}</td>
+      `;
+      attendanceTableBody.appendChild(tr);
+    });
+
+    attendanceTableBody.querySelectorAll('[data-pills]').forEach((group) => {
+      const studentId = group.dataset.pills;
+      group.querySelectorAll('.attendance-pill').forEach((btn) => {
+        btn.addEventListener('click', () => {
+          attendanceState[studentId] = btn.dataset.statut;
+          group.querySelectorAll('.attendance-pill').forEach((b) => b.classList.remove('active'));
+          btn.classList.add('active');
+        });
+      });
+    });
+
+    document.getElementById('attendanceCount').textContent =
+      currentStudents.length + (currentStudents.length > 1 ? ' élèves' : ' élève');
+  }
+
+  document.getElementById('markAllPresentBtn').addEventListener('click', () => {
+    currentStudents.forEach((s) => { attendanceState[s.id] = 'Présent'; });
+    renderAttendanceList();
+  });
+
+  async function loadGroupesForNiveau(niveau) {
+    attGroupeSelect.innerHTML = '<option value="">Chargement...</option>';
+    attGroupeSelect.disabled = true;
+    attendancePlaceholder.classList.remove('hidden');
+    attendanceListWrap.classList.add('hidden');
+
+    if (!niveau) {
+      attGroupeSelect.innerHTML = '<option value="">Choisir d\'abord un niveau...</option>';
+      return;
+    }
+
+    try {
+      await new Promise((r) => setTimeout(r, 200));
+      const students = DEMO_STUDENTS.filter((s) => s.niveau === niveau && s.statut === 'Accepté');
+      const groupes = [...new Set(students.map((s) => s.groupe).filter((g) => g && g !== 'Non assigné'))].sort();
+
+      attGroupeSelect.innerHTML = '<option value="">Choisir un groupe...</option>' +
+        groupes.map((g) => `<option value="${g}">${g}</option>`).join('');
+      attGroupeSelect.disabled = groupes.length === 0;
+      if (groupes.length === 0) {
+        attGroupeSelect.innerHTML = '<option value="">Aucun groupe pour ce niveau</option>';
+      }
+    } catch (e) {
+      attGroupeSelect.innerHTML = '<option value="">Erreur de chargement</option>';
+    }
+  }
+
+  async function loadStudentsForNiveauGroupe(niveau, groupe) {
+    if (!niveau || !groupe) {
+      attendancePlaceholder.classList.remove('hidden');
+      attendanceListWrap.classList.add('hidden');
+      currentStudents = [];
+      return;
+    }
+    attendancePlaceholder.textContent = 'Chargement des élèves...';
+    attendancePlaceholder.classList.remove('hidden');
+    attendanceListWrap.classList.add('hidden');
+
+    try {
+      await new Promise((r) => setTimeout(r, 200));
+      currentStudents = DEMO_STUDENTS
+        .filter((s) => s.niveau === niveau && s.groupe === groupe && s.statut === 'Accepté')
+        .map((s) => ({ ...s }))
+        .sort((a, b) => `${a.nom}${a.prenom}`.localeCompare(`${b.nom}${b.prenom}`));
+
+      // Réinitialise l'état de présence (par défaut : Présent) pour la nouvelle liste.
+      Object.keys(attendanceState).forEach((k) => delete attendanceState[k]);
+      currentStudents.forEach((s) => { attendanceState[s.id] = 'Présent'; });
+
+      if (currentStudents.length === 0) {
+        attendancePlaceholder.textContent = 'Aucun élève dans ce groupe.';
+        attendancePlaceholder.classList.remove('hidden');
+        attendanceListWrap.classList.add('hidden');
+      } else {
+        attendancePlaceholder.classList.add('hidden');
+        attendanceListWrap.classList.remove('hidden');
+        renderAttendanceList();
+      }
+    } catch (e) {
+      attendancePlaceholder.textContent = 'Erreur lors du chargement des élèves.';
+      attendancePlaceholder.classList.remove('hidden');
+      attendanceListWrap.classList.add('hidden');
+    }
+  }
+
+  attNiveauSelect.addEventListener('change', () => {
+    attendanceListWrap.classList.add('hidden');
+    loadGroupesForNiveau(attNiveauSelect.value);
+  });
+  attGroupeSelect.addEventListener('change', () => {
+    loadStudentsForNiveauGroupe(attNiveauSelect.value, attGroupeSelect.value);
+  });
+
+  document.getElementById('saveAttendanceBtn').addEventListener('click', async () => {
+    if (currentStudents.length === 0) return;
+    const heureDebut = heureDebutSelect.value;
+    const heureFin = heureFinSelect.value;
+
+    if (heureFin <= heureDebut) {
+      alert("L'heure de fin doit être après l'heure de début.");
+      return;
+    }
+
+    const today = new Date().toISOString().slice(0, 10);
+    const saveBtn = document.getElementById('saveAttendanceBtn');
+    saveBtn.disabled = true;
+    const originalHtml = saveBtn.innerHTML;
+    saveBtn.innerHTML = 'Enregistrement...';
+
+    try {
+      await new Promise((r) => setTimeout(r, 400));
+      // Démo : l'appel n'est pas persisté, uniquement simulé.
+      showToast('Appel enregistré avec succès');
+    } finally {
+      saveBtn.disabled = false;
+      saveBtn.innerHTML = originalHtml;
+    }
+  });
+
+  (async function initDemo() {
+    const user = { uid: 'demo-teacher' };
+    const teacher = DEMO_TEACHER;
+    currentUser = user;
+    currentTeacher = teacher;
+
+    document.getElementById('welcomeTitle').textContent = `Bonjour, ${teacher.prenom} ${teacher.nom}`;
+    document.getElementById('infoGenre').textContent = teacher.genre || '—';
+    document.getElementById('infoTelephone').textContent = teacher.telephone || '—';
+    document.getElementById('infoAdresse').textContent = teacher.adresse || '—';
+    document.getElementById('infoGroupe').textContent = teacher.groupe || '—';
+
+    const classesWrap = document.getElementById('classesWrap');
+    const niveaux = teacher.niveaux || [];
+    const groupe = teacher.groupe;
+
+    if (niveaux.length) {
+      niveaux.forEach((niveau) => {
+        const span = document.createElement('span');
+        span.className = `inline-flex items-center gap-1.5 text-xs font-extrabold rounded-full px-3.5 py-2 ${levelBadgeClass(niveau)}`;
+        span.textContent = `${niveau} — ${groupe}`;
+        classesWrap.appendChild(span);
+      });
+    } else {
+      classesWrap.innerHTML = '<p class="text-ink/40 text-sm">Aucune classe assignée pour le moment.</p>';
+    }
+
+    // Remplit le filtre "Niveau" de la prise de présence à partir des niveaux de l'enseignant.
+    attNiveauSelect.innerHTML = '<option value="">Choisir un niveau...</option>' +
+      niveaux.map((n) => `<option value="${n}">${n}</option>`).join('');
+
+    const tbody = document.getElementById('studentsTableBody');
+    const emptyState = document.getElementById('emptyState');
+    tbody.innerHTML = `<tr><td colspan="5" class="text-center py-6 text-navy/50">Chargement des élèves...</td></tr>`;
+
+    await new Promise((r) => setTimeout(r, 300));
+
+    const myStudents = DEMO_STUDENTS
+      .filter((s) => s.groupe === groupe && s.statut === 'Accepté' && niveaux.includes(s.niveau))
+      .sort((a, b) => `${a.nom}${a.prenom}`.localeCompare(`${b.nom}${b.prenom}`));
+
+    tbody.innerHTML = '';
+    if (myStudents.length === 0) {
+      emptyState.classList.remove('hidden');
+      document.getElementById('studentCount').textContent = '0 élève';
+    } else {
+      emptyState.classList.add('hidden');
+      document.getElementById('studentCount').textContent = myStudents.length + (myStudents.length > 1 ? ' élèves' : ' élève');
+      myStudents.forEach((s) => {
+        const tr = document.createElement('tr');
+        tr.className = 'row-enter hover:bg-mist/50 transition-colors';
+        tr.innerHTML = `
+          <td class="px-6 sm:px-8 py-4 font-bold text-navy whitespace-nowrap">${s.nom}</td>
+          <td class="px-4 py-4 whitespace-nowrap">${s.prenom}</td>
+          <td class="px-4 py-4 whitespace-nowrap font-mono text-xs font-bold text-purple">${s.id}</td>
+          <td class="px-4 py-4 whitespace-nowrap"><span class="inline-block text-[11px] font-extrabold rounded-full px-3 py-1 ${levelBadgeClass(s.niveau)}">${s.niveau}</span></td>
+          <td class="px-4 sm:px-8 py-4 whitespace-nowrap"><span class="inline-block text-[11px] font-extrabold rounded-full px-3 py-1 ${groupBadgeClass()}">${s.groupe}</span></td>
+        `;
+        tbody.appendChild(tr);
+      });
+    }
+  })();
+
+  document.getElementById('logoutBtn').addEventListener('click', () => {
+    window.location.href = 'connexion-enseignant.html';
+  });
+</script>
+
+</body>
+</html>
