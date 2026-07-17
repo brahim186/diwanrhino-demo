@@ -1,0 +1,1216 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>RIHANIO | INSTITUTION PRIVÉE</title>
+<meta name="description" content="RIHANIO — INSTITUTION PRIVÉE à Kénitra. Accompagnement personnalisé du primaire au baccalauréat, préparation aux examens, méthodologie moderne et enseignants qualifiés.">
+<meta name="keywords" content="INSTITUTION PRIVÉE, cours particuliers, Kénitra, Maroc, préparation examens, baccalauréat, RIHANIO">
+<link rel="icon" type="image/png" href="logo.png">
+
+<!-- Fonts -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,500;0,9..144,600;0,9..144,700;0,9..144,900;1,9..144,500;1,9..144,600&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+<!-- Tailwind -->
+<script src="https://cdn.tailwindcss.com"></script>
+<!-- Splide carousel -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/splide/4.1.4/css/splide.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/splide/4.1.4/js/splide.min.js"></script>
+
+<script>
+  tailwind.config = {
+    theme: {
+      extend: {
+        colors: {
+          navy:   { DEFAULT: '#1B1464', 50:'#EEECF9', 100:'#D6D1F0', 600:'#241A78', 700:'#170F52', 900:'#100B3B' },
+          purple: { DEFAULT: '#5B3AA6', 50:'#F1ECFA' },
+          gold:   { DEFAULT: '#F0A93C', light:'#FBC873', dark:'#D98F1F' },
+          ink:    '#221D3D',
+          mist:   '#F6F4FC',
+          line:   '#E7E2F3',
+        },
+        fontFamily: {
+          display: ['Fraunces', 'serif'],
+          body: ['Manrope', 'sans-serif'],
+        },
+      }
+    }
+  }
+</script>
+
+<style>
+  html { scroll-behavior: smooth; }
+  body { font-family: 'Manrope', sans-serif; color: #221D3D; background:#FFFFFF; }
+  h1,h2,h3,h4, .font-display { font-family: 'Fraunces', serif; }
+
+  ::selection { background: #F0A93C; color:#1B1464; }
+
+  /* Focus visibility */
+  a:focus-visible, button:focus-visible, input:focus-visible, textarea:focus-visible, select:focus-visible {
+    outline: 2px solid #F0A93C;
+    outline-offset: 3px;
+    border-radius: 4px;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    * { animation-duration: 0.01ms !important; animation-iteration-count: 1 !important; transition-duration: 0.01ms !important; scroll-behavior: auto !important; }
+  }
+
+  /* Reveal-on-scroll */
+  .reveal { opacity: 0; transform: translateY(24px); transition: opacity .7s ease, transform .7s ease; }
+  .reveal.is-visible { opacity: 1; transform: translateY(0); }
+
+  /* Sunburst signature */
+  .sunburst { position: absolute; inset: 0; display:flex; align-items:center; justify-content:center; pointer-events:none; }
+  .sunburst svg { width: 100%; height: 100%; }
+
+  /* Sticky nav shadow state handled via JS class */
+  .nav-shadow { box-shadow: 0 8px 30px -12px rgba(27,20,100,0.18); }
+
+  /* Splide arrows/pagination recolor */
+  .splide__arrow { background: rgba(255,255,255,0.14) !important; backdrop-filter: blur(6px); }
+  .splide__arrow svg { fill: #fff !important; }
+  .splide__pagination__page { background: rgba(255,255,255,0.45) !important; }
+  .splide__pagination__page.is-active { background: #F0A93C !important; transform: scale(1.3); }
+
+  .eyebrow { letter-spacing: 0.22em; }
+
+  .card-lift { transition: transform .35s ease, box-shadow .35s ease, border-color .35s ease; }
+  .card-lift:hover { transform: translateY(-6px); box-shadow: 0 24px 48px -20px rgba(27,20,100,0.28); border-color:#F0A93C; }
+
+  .gold-underline { position: relative; }
+  .gold-underline::after {
+    content:""; position:absolute; left:0; bottom:-10px; height:3px; width:52px;
+    background: linear-gradient(90deg,#F0A93C,#5B3AA6);
+    border-radius: 999px;
+  }
+  .gold-underline.center::after { left:50%; transform: translateX(-50%); }
+
+  .stat-num { font-variant-numeric: tabular-nums; }
+
+  .radiating-line { stroke: #F0A93C; }
+
+  /* Marquee for trust strip */
+  .marquee-track { animation: marquee 28s linear infinite; }
+  @keyframes marquee { from { transform: translateX(0); } to { transform: translateX(-50%); } }
+
+  /* Actualités strip (drag/momentum personnalisé) */
+  .actu-card { transition: transform .3s ease, box-shadow .3s ease, border-color .3s ease; cursor: pointer; }
+  .actu-card:hover { transform: translateY(-6px); box-shadow: 0 24px 48px -20px rgba(27,20,100,0.25); }
+  .actu-line-clamp { display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
+</style>
+</head>
+
+<body class="antialiased">
+
+<!-- ================= HEADER / NAV ================= -->
+<header id="siteHeader" class="fixed top-0 inset-x-0 z-50 bg-white/95 backdrop-blur border-b border-line transition-shadow duration-300">
+  <div class="max-w-[96%] mx-auto px-2 sm:px-4">
+    <div class="flex items-center justify-between h-20 gap-4">
+      
+      <a href="#accueil" class="flex items-center gap-3 group shrink-0">
+        <img src="logo.png" alt="Logo RIHANIO" class="h-14 w-14 object-contain">
+        <span class="hidden xl:flex flex-col leading-tight">
+          <span class="font-display font-semibold text-lg text-navy tracking-tight">RIHANIO</span>
+          <span class="text-[11px] uppercase tracking-[0.16em] text-gold-dark font-semibold">INSTITUTION PRIVÉE</span>
+        </span>
+      </a>
+
+      <nav class="hidden lg:flex items-center gap-6 xl:gap-8 font-semibold text-[14px] xl:text-[15px] text-navy/80 whitespace-nowrap">
+        <a href="#accueil" class="hover:text-gold-dark transition-colors">Accueil</a>
+        <a href="#actualites" class="hover:text-gold-dark transition-colors">Actualités</a>
+        <a href="#apropos" class="hover:text-gold-dark transition-colors">À propos</a>
+        <a href="#programmes" class="hover:text-gold-dark transition-colors">Nos Programmes</a>
+        <a href="#emploi-du-temps" class="hover:text-gold-dark transition-colors">Emploi du Temps</a>
+        <a href="#calendrier" class="hover:text-gold-dark transition-colors">Calendrier</a>
+        <a href="#temoignages" class="hover:text-gold-dark transition-colors">Témoignages</a>
+        <a href="#contact" class="hover:text-gold-dark transition-colors">Contact</a>
+      </nav>
+
+      <div class="flex items-center gap-3 shrink-0">
+        <a href="espaces.html" class="hidden sm:inline-flex items-center gap-2 bg-gold hover:bg-gold-dark text-navy-900 text-xs xl:text-sm font-bold px-4 py-2.5 xl:px-5 xl:py-3 rounded-full transition-colors shadow-lg shadow-gold/30 whitespace-nowrap">
+          Nos Espaces
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" class="rtl:rotate-180"><path d="M5 12h14M13 6l6 6-6 6" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </a>
+        <a href="inscription.html" class="hidden sm:inline-flex items-center gap-2 bg-navy hover:bg-navy-700 text-white text-xs xl:text-sm font-bold px-4 py-2.5 xl:px-5 xl:py-3 rounded-full transition-colors shadow-lg shadow-navy/20 whitespace-nowrap">
+          Portail d'Inscription
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" class="rtl:rotate-180"><path d="M5 12h14M13 6l6 6-6 6" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </a>
+        <button id="menuBtn" aria-label="Ouvrir le menu" aria-expanded="false" class="lg:hidden w-11 h-11 grid place-items-center rounded-full border border-line text-navy">
+          <svg id="menuIcon" width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M4 7h16M4 12h16M4 17h16" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/></svg>
+        </button>
+      </div>
+
+    </div>
+  </div>
+</header>
+  
+  <!-- Mobile menu -->
+  <div id="mobileMenu" class="lg:hidden hidden border-t border-line bg-white">
+    <nav class="px-5 py-4 flex flex-col gap-1 font-semibold text-navy">
+      <a href="#accueil" class="py-3 border-b border-line/70">Accueil</a>
+      <a href="#actualites" class="py-3 border-b border-line/70">Actualités</a>
+      <a href="#apropos" class="py-3 border-b border-line/70">À propos</a>
+      <a href="#programmes" class="py-3 border-b border-line/70">Nos Programmes</a>
+      <a href="#emploi-du-temps" class="py-3 border-b border-line/70">Emploi du Temps</a>
+      <a href="#calendrier" class="py-3 border-b border-line/70">Calendrier</a>
+      <a href="#temoignages" class="py-3 border-b border-line/70">Témoignages</a>
+      <a href="#contact" class="py-3 border-b border-line/70">Contact</a>
+      <a href="espaces.html" class="mt-3 text-center bg-gold text-navy-900 font-bold px-5 py-3 rounded-full">Nos Espaces</a>
+      <a href="inscription.html" class="mt-2 text-center bg-navy text-white font-bold px-5 py-3 rounded-full">Portail d'Inscription</a>
+    </nav>
+  </div>
+</header>
+
+<!-- ================= HERO / CAROUSEL ================= -->
+<section id="accueil" class="relative pt-20">
+  <div class="splide" aria-label="Présentation de l'institution">
+    <div class="splide__track">
+      <ul class="splide__list">
+
+        <li class="splide__slide">
+          <div class="relative h-[86vh] min-h-[560px] max-h-[820px] w-full overflow-hidden">
+            <img src="https://images.unsplash.com/photo-1523240795612-9a054b0db644?q=80&w=1800&auto=format&fit=crop" alt="Salle de classe moderne et lumineuse" class="absolute inset-0 w-full h-full object-cover">
+            <div class="absolute inset-0 bg-gradient-to-r from-navy-900/85 via-navy-900/55 to-navy-900/20"></div>
+          </div>
+        </li>
+
+        <li class="splide__slide">
+          <div class="relative h-[86vh] min-h-[560px] max-h-[820px] w-full overflow-hidden">
+            <img src="https://images.unsplash.com/photo-1509062522246-3755977927d7?q=80&w=1800&auto=format&fit=crop" alt="Élèves en séance de travail encadrée" class="absolute inset-0 w-full h-full object-cover">
+            <div class="absolute inset-0 bg-gradient-to-r from-navy-900/85 via-navy-900/55 to-navy-900/20"></div>
+          </div>
+        </li>
+
+        <li class="splide__slide">
+          <div class="relative h-[86vh] min-h-[560px] max-h-[820px] w-full overflow-hidden">
+            <img src="https://images.unsplash.com/photo-1544717305-2782549b5136?q=80&w=1800&auto=format&fit=crop" alt="Étudiant en préparation d'examen" class="absolute inset-0 w-full h-full object-cover">
+            <div class="absolute inset-0 bg-gradient-to-r from-navy-900/85 via-navy-900/55 to-navy-900/20"></div>
+          </div>
+        </li>
+
+      </ul>
+    </div>
+  </div>
+
+  <!-- Overlaid content -->
+  <div class="pointer-events-none absolute inset-0 top-20 flex items-center">
+    <div class="max-w-7xl mx-auto px-5 sm:px-8 w-full">
+      <div class="pointer-events-auto max-w-xl bg-white/12 backdrop-blur-md border border-white/25 rounded-3xl p-8 sm:p-10 shadow-2xl relative overflow-hidden">
+        <div class="sunburst opacity-25 -z-0">
+          <svg viewBox="0 0 400 400" fill="none">
+            <g stroke="#F0A93C" stroke-width="2">
+              <line x1="200" y1="0" x2="200" y2="60"/><line x1="200" y1="400" x2="200" y2="340"/>
+              <line x1="0" y1="200" x2="60" y2="200"/><line x1="400" y1="200" x2="340" y2="200"/>
+              <line x1="58" y1="58" x2="100" y2="100"/><line x1="342" y1="58" x2="300" y2="100"/>
+              <line x1="58" y1="342" x2="100" y2="300"/><line x1="342" y1="342" x2="300" y2="300"/>
+            </g>
+          </svg>
+        </div>
+        <span class="relative eyebrow text-gold-light text-xs font-extrabold uppercase">INSTITUTION PRIVÉE</span>
+        <h1 class="relative font-display text-white text-4xl sm:text-5xl font-semibold leading-[1.08] mt-3">
+          Cultiver le savoir,<br> éclairer chaque avenir.
+        </h1>
+        <p class="relative text-white/85 mt-5 text-base sm:text-[17px] leading-relaxed">
+          RIHANIO accompagne vos enfants du primaire au baccalauréat avec des enseignants qualifiés, une méthode structurée et un suivi individuel à chaque étape.
+        </p>
+        <div class="relative flex flex-wrap gap-4 mt-8">
+          <a href="inscription.html" class="inline-flex items-center gap-2 bg-gold hover:bg-gold-dark text-navy-900 font-bold px-6 py-3.5 rounded-full transition-colors">
+            Réserver un bilan gratuit
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none"><path d="M5 12h14M13 6l6 6-6 6" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </a>
+          <a href="#programmes" class="inline-flex items-center gap-2 border border-white/50 text-white font-bold px-6 py-3.5 rounded-full hover:bg-white/10 transition-colors">
+            Découvrir nos programmes
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= TRUST STRIP ================= -->
+<section class="bg-navy-900 py-4 overflow-hidden border-b border-white/10">
+  <div class="flex whitespace-nowrap marquee-track">
+    <div class="flex items-center gap-16 pr-16">
+      <span class="text-white/60 font-semibold text-sm tracking-wide">Programme national &amp; missions internationales</span>
+      <span class="text-gold text-sm">✦</span>
+      <span class="text-white/60 font-semibold text-sm tracking-wide">Suivi individualisé par niveau</span>
+      <span class="text-gold text-sm">✦</span>
+      <span class="text-white/60 font-semibold text-sm tracking-wide">Préparation Examens &amp; Baccalauréat</span>
+      <span class="text-gold text-sm">✦</span>
+      <span class="text-white/60 font-semibold text-sm tracking-wide">Petits groupes, grande attention</span>
+      <span class="text-gold text-sm">✦</span>
+    </div>
+    <div class="flex items-center gap-16 pr-16" aria-hidden="true">
+      <span class="text-white/60 font-semibold text-sm tracking-wide">Programme national &amp; missions internationales</span>
+      <span class="text-gold text-sm">✦</span>
+      <span class="text-white/60 font-semibold text-sm tracking-wide">Suivi individualisé par niveau</span>
+      <span class="text-gold text-sm">✦</span>
+      <span class="text-white/60 font-semibold text-sm tracking-wide">Préparation Examens &amp; Baccalauréat</span>
+      <span class="text-gold text-sm">✦</span>
+      <span class="text-white/60 font-semibold text-sm tracking-wide">Petits groupes, grande attention</span>
+      <span class="text-gold text-sm">✦</span>
+    </div>
+  </div>
+</section>
+
+<!-- ================= ACTUALITÉS ================= -->
+<section id="actualites" class="py-24 sm:py-28 bg-mist relative overflow-hidden">
+  <div class="max-w-7xl mx-auto px-5 sm:px-8">
+    <div class="reveal flex flex-col sm:flex-row sm:items-end sm:justify-between gap-4 mb-12">
+      <div>
+        <span class="eyebrow text-gold-dark text-xs font-extrabold uppercase">Vie de l'établissement</span>
+        <h2 class="gold-underline font-display text-navy text-3xl sm:text-[2.6rem] font-semibold leading-tight mt-4 pb-4">
+          Actualités &amp; Annonces
+        </h2>
+      </div>
+      <p class="text-ink/60 text-sm max-w-sm">Suivez les dernières nouvelles, événements et communications importantes de RIHANIO.</p>
+    </div>
+  </div>
+
+  <div class="reveal max-w-7xl mx-auto px-5 sm:px-8">
+    <div id="actualitesLoading" class="flex items-center justify-center py-16">
+      <span class="w-8 h-8 rounded-full border-4 border-navy/15 border-t-navy animate-spin"></span>
+    </div>
+
+    <div id="actualitesEmpty" class="hidden text-center py-16">
+      <p class="text-ink/40 text-sm">Aucune actualité publiée pour le moment. Revenez bientôt !</p>
+    </div>
+
+    <div id="actualitesStrip" class="hidden">
+      <div class="flex items-center justify-end gap-2 mb-4">
+        <button type="button" id="actuArrowPrev" aria-label="Actualités plus anciennes" class="w-10 h-10 grid place-items-center rounded-full bg-white border border-line text-navy hover:border-gold-dark transition-colors shadow-sm">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M15 6l-6 6 6 6" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <button type="button" id="actuArrowNext" aria-label="Actualités plus récentes" class="w-10 h-10 grid place-items-center rounded-full bg-white border border-line text-navy hover:border-gold-dark transition-colors shadow-sm">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M9 6l6 6-6 6" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+      </div>
+
+      <!-- Viewport: overflow-hidden car le défilement est 100% géré en JS (scrollLeft),
+           pas de scrollbar native, pas de conflit avec le drag/momentum personnalisé. -->
+      <div id="actualitesViewport" class="overflow-hidden">
+        <div id="actualitesList" class="flex gap-6 cursor-grab select-none"></div>
+      </div>
+
+      <div class="mt-5 h-1 rounded-full bg-line overflow-hidden">
+        <div id="actualitesProgress" class="h-full w-1/3 rounded-full bg-gradient-to-r from-purple to-gold"></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Modal détails actualité -->
+<div id="actualiteModal" class="hidden fixed inset-0 z-[70] bg-navy-900/70 backdrop-blur-sm flex items-center justify-center px-5 py-8">
+  <div class="relative w-full max-w-xl max-h-[88vh] bg-white rounded-3xl shadow-2xl flex flex-col overflow-hidden">
+    <button type="button" id="closeActuModalBtn" aria-label="Fermer" class="absolute top-4 right-4 w-9 h-9 grid place-items-center rounded-full bg-white/90 hover:bg-white text-navy shadow-lg transition-colors z-10">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M18 6L6 18M6 6l12 12" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+    </button>
+    <div class="overflow-y-auto">
+      <div class="relative bg-mist">
+        <img id="modalActuImage" src="" alt="" class="hidden w-full max-h-[60vh] object-contain mx-auto">
+      </div>
+      <div class="px-7 sm:px-9 py-7 sm:py-8">
+        <p id="modalActuDate" class="text-[11px] font-extrabold uppercase tracking-wide text-gold-dark mb-2">—</p>
+        <h3 id="modalActuTitre" class="font-display font-semibold text-navy text-2xl leading-tight">—</h3>
+        <p id="modalActuContenu" class="text-ink/70 leading-relaxed mt-5 text-[15px] whitespace-pre-line">—</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ================= ABOUT ================= -->
+<section id="apropos" class="py-24 sm:py-28 bg-white relative overflow-hidden">
+  <div class="max-w-7xl mx-auto px-5 sm:px-8 grid lg:grid-cols-2 gap-16 items-center">
+
+    <div class="reveal relative order-2 lg:order-1">
+      <div class="relative rounded-[2rem] overflow-hidden shadow-2xl shadow-navy/15 border-8 border-white ring-1 ring-line">
+        <img src="https://images.unsplash.com/photo-1571260899304-425eee4c7efc?q=80&w=1200&auto=format&fit=crop" alt="Enseignant accompagnant un élève" class="w-full h-[460px] object-cover">
+      </div>
+      <div class="hidden sm:flex absolute -bottom-8 -left-8 bg-white rounded-2xl shadow-xl border border-line p-5 items-center gap-4 w-64">
+        <div class="w-12 h-12 rounded-full bg-gold/15 grid place-items-center shrink-0">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M12 2l2.6 6.6L21 9l-5 4.4L17.4 21 12 17.3 6.6 21 8 13.4 3 9l6.4-.4L12 2z" fill="#F0A93C"/></svg>
+        </div>
+        <div>
+          <p class="font-display font-bold text-navy text-lg leading-none">95%</p>
+          <p class="text-xs text-ink/60 mt-1 leading-snug">de réussite aux examens de nos élèves accompagnés</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="reveal order-1 lg:order-2">
+      <span class="eyebrow text-gold-dark text-xs font-extrabold uppercase">Qui sommes-nous</span>
+      <h2 class="gold-underline font-display text-navy text-3xl sm:text-[2.6rem] font-semibold leading-tight mt-4 pb-4">
+        Une institution bâtie sur la rigueur et la bienveillance
+      </h2>
+      <p class="text-ink/70 leading-relaxed mt-8 text-[16px]">
+        RIHANIO — « le foyer du savoir » — est une INSTITUTION PRIVÉE fondée pour offrir à chaque élève un accompagnement pédagogique exigeant et humain. Notre mission est simple&nbsp;: transformer les difficultés scolaires en réussites durables, à travers un encadrement personnalisé et une pédagogie moderne adaptée au rythme de chaque enfant.
+      </p>
+      <p class="text-ink/70 leading-relaxed mt-4 text-[16px]">
+        Comme le suggère notre emblème — des mains qui portent et un rayonnement qui guide — nous plaçons le soutien humain au cœur de notre méthode&nbsp;: écouter, encadrer, et éclairer le chemin de chaque élève vers l'excellence.
+      </p>
+
+      <div class="grid sm:grid-cols-3 gap-5 mt-10">
+        <div class="flex flex-col gap-2">
+          <svg width="26" height="26" viewBox="0 0 24 24" fill="none"><path d="M12 3l9 4.9-9 4.9-9-4.9L12 3z" stroke="#1B1464" stroke-width="1.8" stroke-linejoin="round"/><path d="M6 10.5V16c0 1.2 2.7 3 6 3s6-1.8 6-3v-5.5" stroke="#1B1464" stroke-width="1.8"/></svg>
+          <p class="font-bold text-navy text-sm">Excellence</p>
+          <p class="text-ink/60 text-xs leading-relaxed">Un standard pédagogique élevé, aligné sur les exigences du programme national.</p>
+        </div>
+        <div class="flex flex-col gap-2">
+          <svg width="26" height="26" viewBox="0 0 24 24" fill="none"><path d="M12 21s-7.5-4.6-10-9.1C.5 8.2 2.6 4.5 6.4 4.1c2-.2 3.7.8 5.6 3 1.9-2.2 3.6-3.2 5.6-3 3.8.4 5.9 4.1 4.4 7.8C19.5 16.4 12 21 12 21z" stroke="#5B3AA6" stroke-width="1.8" stroke-linejoin="round"/></svg>
+          <p class="font-bold text-navy text-sm">Bienveillance</p>
+          <p class="text-ink/60 text-xs leading-relaxed">Un climat de confiance où chaque élève progresse à son propre rythme.</p>
+        </div>
+        <div class="flex flex-col gap-2">
+          <svg width="26" height="26" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="9" stroke="#F0A93C" stroke-width="1.8"/><path d="M12 7v5l3.5 2" stroke="#F0A93C" stroke-width="1.8" stroke-linecap="round"/></svg>
+          <p class="font-bold text-navy text-sm">Régularité</p>
+          <p class="text-ink/60 text-xs leading-relaxed">Un suivi continu et des bilans réguliers partagés avec les familles.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= PROGRAMS ================= -->
+<section id="programmes" class="py-24 sm:py-28 bg-mist relative">
+  <div class="max-w-7xl mx-auto px-5 sm:px-8">
+    <div class="reveal max-w-2xl mx-auto text-center">
+      <span class="eyebrow text-gold-dark text-xs font-extrabold uppercase">Nos Programmes</span>
+      <h2 class="gold-underline center font-display text-navy text-3xl sm:text-[2.6rem] font-semibold leading-tight mt-4 pb-4">
+        Un accompagnement pour chaque étape du parcours
+      </h2>
+      <p class="text-ink/60 mt-8 text-[15.5px]">Des parcours structurés, conçus autour du programme officiel et des besoins réels de chaque niveau.</p>
+    </div>
+
+    <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-6 mt-16">
+
+      <article class="reveal card-lift group bg-white rounded-2xl border border-line p-7 flex flex-col">
+        <div class="w-14 h-14 rounded-xl bg-navy grid place-items-center mb-6">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M4 6h16M4 12h16M4 18h9" stroke="#F0A93C" stroke-width="2" stroke-linecap="round"/></svg>
+        </div>
+        <h3 class="font-display font-semibold text-navy text-xl">Primaire</h3>
+        <p class="text-xs uppercase tracking-wide text-gold-dark font-bold mt-1">CP — CM2</p>
+        <p class="text-ink/60 text-sm leading-relaxed mt-4 flex-1">Fondamentaux du lire-écrire-compter, méthodologie du travail et confiance en soi dès les premières années.</p>
+        <a href="#contact" class="mt-6 inline-flex items-center gap-2 text-navy font-bold text-sm group-hover:text-gold-dark transition-colors">
+          En savoir plus <svg width="13" height="13" viewBox="0 0 24 24" fill="none"><path d="M5 12h14M13 6l6 6-6 6" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </a>
+      </article>
+
+      <article class="reveal card-lift group bg-white rounded-2xl border border-line p-7 flex flex-col">
+        <div class="w-14 h-14 rounded-xl bg-navy grid place-items-center mb-6">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M12 3l9 4.9-9 4.9-9-4.9L12 3z" stroke="#F0A93C" stroke-width="2" stroke-linejoin="round"/><path d="M6 10.5V16c0 1.2 2.7 3 6 3s6-1.8 6-3v-5.5" stroke="#F0A93C" stroke-width="2"/></svg>
+        </div>
+        <h3 class="font-display font-semibold text-navy text-xl">Collège</h3>
+        <p class="text-xs uppercase tracking-wide text-gold-dark font-bold mt-1">1AC — 3AC</p>
+        <p class="text-ink/60 text-sm leading-relaxed mt-4 flex-1">Renforcement disciplinaire, préparation au tronc commun et accompagnement méthodologique renforcé.</p>
+        <a href="#contact" class="mt-6 inline-flex items-center gap-2 text-navy font-bold text-sm group-hover:text-gold-dark transition-colors">
+          En savoir plus <svg width="13" height="13" viewBox="0 0 24 24" fill="none"><path d="M5 12h14M13 6l6 6-6 6" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </a>
+      </article>
+
+      <article class="reveal card-lift group bg-white rounded-2xl border border-line p-7 flex flex-col">
+        <div class="w-14 h-14 rounded-xl bg-navy grid place-items-center mb-6">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M4 19V6a2 2 0 012-2h9l5 5v10a2 2 0 01-2 2H6a2 2 0 01-2-2z" stroke="#F0A93C" stroke-width="2" stroke-linejoin="round"/><path d="M15 4v5h5" stroke="#F0A93C" stroke-width="2" stroke-linejoin="round"/></svg>
+        </div>
+        <h3 class="font-display font-semibold text-navy text-xl">Lycée</h3>
+        <p class="text-xs uppercase tracking-wide text-gold-dark font-bold mt-1">Tronc Commun — 2 Bac</p>
+        <p class="text-ink/60 text-sm leading-relaxed mt-4 flex-1">Approfondissement par filière, entraînement intensif et stratégies pour aborder chaque contrôle avec sérénité.</p>
+        <a href="#contact" class="mt-6 inline-flex items-center gap-2 text-navy font-bold text-sm group-hover:text-gold-dark transition-colors">
+          En savoir plus <svg width="13" height="13" viewBox="0 0 24 24" fill="none"><path d="M5 12h14M13 6l6 6-6 6" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </a>
+      </article>
+
+      <article class="reveal card-lift group bg-white rounded-2xl border border-line p-7 flex flex-col">
+        <div class="w-14 h-14 rounded-xl bg-navy grid place-items-center mb-6">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M12 2l2.6 6.6L21 9l-5 4.4L17.4 21 12 17.3 6.6 21 8 13.4 3 9l6.4-.4L12 2z" stroke="#F0A93C" stroke-width="2" stroke-linejoin="round"/></svg>
+        </div>
+        <h3 class="font-display font-semibold text-navy text-xl">Préparation Examens</h3>
+        <p class="text-xs uppercase tracking-wide text-gold-dark font-bold mt-1">Bac &amp; Concours</p>
+        <p class="text-ink/60 text-sm leading-relaxed mt-4 flex-1">Sessions intensives, examens blancs chronométrés et coaching individuel pour aborder le jour J en confiance.</p>
+        <a href="#contact" class="mt-6 inline-flex items-center gap-2 text-navy font-bold text-sm group-hover:text-gold-dark transition-colors">
+          En savoir plus <svg width="13" height="13" viewBox="0 0 24 24" fill="none"><path d="M5 12h14M13 6l6 6-6 6" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </a>
+      </article>
+
+    </div>
+  </div>
+</section>
+
+<!-- ================= WHY CHOOSE US ================= -->
+<section class="py-24 sm:py-28 bg-navy-900 relative overflow-hidden">
+  <div class="sunburst opacity-[0.06]">
+    <svg viewBox="0 0 800 800" fill="none">
+      <g stroke="#F0A93C" stroke-width="1.5">
+        <circle cx="400" cy="400" r="360"/>
+        <circle cx="400" cy="400" r="280"/>
+        <circle cx="400" cy="400" r="200"/>
+      </g>
+    </svg>
+  </div>
+  <div class="max-w-7xl mx-auto px-5 sm:px-8 relative">
+    <div class="reveal max-w-2xl">
+      <span class="eyebrow text-gold text-xs font-extrabold uppercase">Pourquoi nous choisir</span>
+      <h2 class="font-display text-white text-3xl sm:text-[2.6rem] font-semibold leading-tight mt-4">
+        Une méthode pensée pour la réussite de votre enfant
+      </h2>
+    </div>
+
+    <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-6 mt-16">
+      <div class="reveal bg-white/[0.06] border border-white/10 rounded-2xl p-7">
+        <p class="font-display stat-num text-gold text-4xl font-bold">95%</p>
+        <p class="text-white font-semibold mt-2 text-sm">Taux de réussite</p>
+        <p class="text-white/55 text-xs mt-2 leading-relaxed">aux examens de fin d'année pour nos élèves suivis toute l'année.</p>
+      </div>
+      <div class="reveal bg-white/[0.06] border border-white/10 rounded-2xl p-7">
+        <p class="font-display stat-num text-gold text-4xl font-bold">40+</p>
+        <p class="text-white font-semibold mt-2 text-sm">Enseignants qualifiés</p>
+        <p class="text-white/55 text-xs mt-2 leading-relaxed">sélectionnés pour leur expertise et leur pédagogie.</p>
+      </div>
+      <div class="reveal bg-white/[0.06] border border-white/10 rounded-2xl p-7">
+        <p class="font-display stat-num text-gold text-4xl font-bold">6</p>
+        <p class="text-white font-semibold mt-2 text-sm">Élèves par groupe</p>
+        <p class="text-white/55 text-xs mt-2 leading-relaxed">en moyenne, pour une attention réellement individualisée.</p>
+      </div>
+      <div class="reveal bg-white/[0.06] border border-white/10 rounded-2xl p-7">
+        <p class="font-display stat-num text-gold text-4xl font-bold">1200+</p>
+        <p class="text-white font-semibold mt-2 text-sm">Élèves accompagnés</p>
+        <p class="text-white/55 text-xs mt-2 leading-relaxed">depuis la création de l'institution, tous niveaux confondus.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= CALENDAR / SCHEDULE ================= -->
+<!-- ================= EMPLOI DU TEMPS ================= -->
+<section id="emploi-du-temps" class="py-24 sm:py-28 bg-white">
+  <div class="max-w-7xl mx-auto px-5 sm:px-8">
+    <div class="reveal max-w-2xl mx-auto text-center">
+      <span class="eyebrow text-gold-dark text-xs font-extrabold uppercase">Organisation</span>
+      <h2 class="gold-underline center font-display text-navy text-3xl sm:text-[2.6rem] font-semibold leading-tight mt-4 pb-4">
+        Consultez votre emploi du temps
+      </h2>
+      <p class="text-ink/60 text-sm mt-4 leading-relaxed">Élèves et enseignants peuvent retrouver ici leur emploi du temps hebdomadaire à jour, mis à disposition dès sa publication par l'administration.</p>
+    </div>
+
+    <div class="grid sm:grid-cols-2 gap-6 mt-14 max-w-4xl mx-auto">
+      <a href="emploi-du-temps-eleves.html" class="reveal card-lift bg-mist rounded-2xl border border-line p-8 flex flex-col items-start gap-4">
+        <div class="w-12 h-12 rounded-full bg-navy/10 grid place-items-center">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#1B1464" stroke-width="1.8"><path d="M4 19.5V6a2 2 0 012-2h11a2 2 0 012 2v13.5M4 19.5A2.5 2.5 0 006.5 22H19M4 19.5A2.5 2.5 0 016.5 17H19v5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </div>
+        <div>
+          <h3 class="font-display font-semibold text-navy text-lg">Espace Élèves</h3>
+          <p class="text-ink/60 text-sm mt-2 leading-relaxed">Consultez l'emploi du temps de votre classe, par niveau et par groupe.</p>
+        </div>
+        <span class="inline-flex items-center gap-2 text-navy font-bold text-sm mt-auto">
+          Voir mon emploi du temps
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" class="rtl:rotate-180"><path d="M5 12h14M13 6l6 6-6 6" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </span>
+      </a>
+
+      <a href="emploi-du-temps-enseignants.html" class="reveal card-lift bg-mist rounded-2xl border border-line p-8 flex flex-col items-start gap-4">
+        <div class="w-12 h-12 rounded-full bg-gold/15 grid place-items-center">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#D98F1F" stroke-width="1.8"><circle cx="12" cy="8" r="3.2"/><path d="M4.5 20a7.5 7.5 0 0115 0" stroke-linecap="round"/></svg>
+        </div>
+        <div>
+          <h3 class="font-display font-semibold text-navy text-lg">Espace Enseignants</h3>
+          <p class="text-ink/60 text-sm mt-2 leading-relaxed">Retrouvez votre emploi du temps hebdomadaire par matière et par classe.</p>
+        </div>
+        <span class="inline-flex items-center gap-2 text-navy font-bold text-sm mt-auto">
+          Voir mon emploi du temps
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" class="rtl:rotate-180"><path d="M5 12h14M13 6l6 6-6 6" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </span>
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- ================= CALENDRIER ================= -->
+<section id="calendrier" class="py-24 sm:py-28 bg-white">
+  <div class="max-w-7xl mx-auto px-5 sm:px-8 grid lg:grid-cols-5 gap-14">
+    <div class="reveal lg:col-span-2">
+      <span class="eyebrow text-gold-dark text-xs font-extrabold uppercase">Organisation</span>
+      <h2 class="gold-underline font-display text-navy text-3xl sm:text-[2.4rem] font-semibold leading-tight mt-4 pb-4">
+        Un rythme hebdomadaire clair et adapté
+      </h2>
+      <p class="text-ink/70 leading-relaxed mt-8 text-[15.5px]">
+        Les séances sont réparties en petits groupes selon le niveau et la matière, avec des créneaux fixes chaque semaine pour ancrer de bonnes habitudes de travail.
+      </p>
+      <div class="mt-8 flex items-start gap-4">
+        <div class="w-11 h-11 rounded-full bg-gold/15 grid place-items-center shrink-0 mt-1">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none"><rect x="3" y="5" width="18" height="16" rx="2" stroke="#D98F1F" stroke-width="1.8"/><path d="M3 10h18M8 3v4M16 3v4" stroke="#D98F1F" stroke-width="1.8" stroke-linecap="round"/></svg>
+        </div>
+        <div>
+          <p class="font-bold text-navy text-sm">Calendrier trimestriel</p>
+          <p class="text-ink/60 text-xs mt-1 leading-relaxed">Un planning transmis en début de trimestre, avec bilans réguliers pour les familles.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="reveal lg:col-span-3 overflow-x-auto rounded-2xl border border-line">
+      <table class="w-full text-sm min-w-[560px]">
+        <thead>
+          <tr class="bg-navy text-white text-left">
+            <th class="py-4 px-5 font-semibold text-xs uppercase tracking-wide">Créneau</th>
+            <th class="py-4 px-5 font-semibold text-xs uppercase tracking-wide">Lun / Mer / Ven</th>
+            <th class="py-4 px-5 font-semibold text-xs uppercase tracking-wide">Mar / Jeu</th>
+            <th class="py-4 px-5 font-semibold text-xs uppercase tracking-wide">Samedi</th>
+          </tr>
+        </thead>
+        <tbody class="divide-y divide-line">
+          <tr class="hover:bg-mist transition-colors">
+            <td class="py-4 px-5 font-bold text-navy">16h30 – 18h00</td>
+            <td class="py-4 px-5 text-ink/70">Primaire</td>
+            <td class="py-4 px-5 text-ink/70">Collège</td>
+            <td class="py-4 px-5 text-ink/70">Examens blancs</td>
+          </tr>
+          <tr class="hover:bg-mist transition-colors">
+            <td class="py-4 px-5 font-bold text-navy">18h15 – 19h45</td>
+            <td class="py-4 px-5 text-ink/70">Collège</td>
+            <td class="py-4 px-5 text-ink/70">Lycée</td>
+            <td class="py-4 px-5 text-ink/70">Préparation Bac</td>
+          </tr>
+          <tr class="hover:bg-mist transition-colors">
+            <td class="py-4 px-5 font-bold text-navy">20h00 – 21h30</td>
+            <td class="py-4 px-5 text-ink/70">Lycée / Bac</td>
+            <td class="py-4 px-5 text-ink/70">Soutien intensif</td>
+            <td class="py-4 px-5 text-ink/70">—</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+<!-- ================= TESTIMONIALS ================= -->
+<section id="temoignages" class="py-24 sm:py-28 bg-mist">
+  <div class="max-w-7xl mx-auto px-5 sm:px-8">
+    <div class="reveal max-w-2xl mx-auto text-center">
+      <span class="eyebrow text-gold-dark text-xs font-extrabold uppercase">Témoignages</span>
+      <h2 class="gold-underline center font-display text-navy text-3xl sm:text-[2.6rem] font-semibold leading-tight mt-4 pb-4">
+        Ce que disent les familles
+      </h2>
+    </div>
+
+    <div class="grid md:grid-cols-3 gap-6 mt-16">
+      <figure class="reveal card-lift bg-white rounded-2xl border border-line p-7">
+        <div class="flex gap-1 text-gold mb-4" aria-hidden="true">★★★★★</div>
+        <blockquote class="text-ink/75 text-sm leading-relaxed">« Depuis qu'il suit les séances de RIHANIO, mon fils a repris confiance en lui. Les enseignants sont très à l'écoute et le suivi est vraiment sérieux. »</blockquote>
+        <figcaption class="mt-6 flex items-center gap-3">
+          <div class="w-11 h-11 rounded-full bg-navy/10 grid place-items-center font-display font-bold text-navy">S.</div>
+          <div>
+            <p class="font-bold text-navy text-sm">Samira B.</p>
+            <p class="text-ink/50 text-xs">Maman d'un élève de 3AC</p>
+          </div>
+        </figcaption>
+      </figure>
+
+      <figure class="reveal card-lift bg-white rounded-2xl border border-line p-7">
+        <div class="flex gap-1 text-gold mb-4" aria-hidden="true">★★★★★</div>
+        <blockquote class="text-ink/75 text-sm leading-relaxed">« La préparation aux examens blancs m'a énormément aidée à gérer le stress du Bac. J'ai obtenu bien plus que ce que j'espérais. »</blockquote>
+        <figcaption class="mt-6 flex items-center gap-3">
+          <div class="w-11 h-11 rounded-full bg-navy/10 grid place-items-center font-display font-bold text-navy">Y.</div>
+          <div>
+            <p class="font-bold text-navy text-sm">Yassine M.</p>
+            <p class="text-ink/50 text-xs">Élève, 2 Bac Sciences</p>
+          </div>
+        </figcaption>
+      </figure>
+
+      <figure class="reveal card-lift bg-white rounded-2xl border border-line p-7">
+        <div class="flex gap-1 text-gold mb-4" aria-hidden="true">★★★★★</div>
+        <blockquote class="text-ink/75 text-sm leading-relaxed">« Un cadre chaleureux et exigeant à la fois. Le rapport hebdomadaire nous permet vraiment de suivre les progrès de notre fille. »</blockquote>
+        <figcaption class="mt-6 flex items-center gap-3">
+          <div class="w-11 h-11 rounded-full bg-navy/10 grid place-items-center font-display font-bold text-navy">K.</div>
+          <div>
+            <p class="font-bold text-navy text-sm">Karim A.</p>
+            <p class="text-ink/50 text-xs">Papa d'une élève de CM2</p>
+          </div>
+        </figcaption>
+      </figure>
+    </div>
+  </div>
+</section>
+
+<!-- ================= CTA BAND ================= -->
+<section class="py-16 bg-gradient-to-r from-navy to-purple relative overflow-hidden">
+  <div class="max-w-5xl mx-auto px-5 sm:px-8 flex flex-col sm:flex-row items-center justify-between gap-6 text-center sm:text-left">
+    <div>
+      <h3 class="font-display text-white text-2xl sm:text-3xl font-semibold">Offrez à votre enfant le bon accompagnement</h3>
+      <p class="text-white/75 text-sm mt-2">Un premier bilan pédagogique gratuit, sans engagement.</p>
+    </div>
+    <a href="#contact" class="shrink-0 inline-flex items-center gap-2 bg-gold hover:bg-gold-dark text-navy-900 font-bold px-7 py-3.5 rounded-full transition-colors">
+      Contactez-nous
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none"><path d="M5 12h14M13 6l6 6-6 6" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    </a>
+  </div>
+</section>
+
+<!-- ================= CONTACT ================= -->
+<section id="contact" class="py-24 sm:py-28 bg-white">
+  <div class="max-w-7xl mx-auto px-5 sm:px-8 grid lg:grid-cols-5 gap-14">
+
+    <div class="reveal lg:col-span-2">
+      <span class="eyebrow text-gold-dark text-xs font-extrabold uppercase">Contact</span>
+      <h2 class="gold-underline font-display text-navy text-3xl sm:text-[2.4rem] font-semibold leading-tight mt-4 pb-4">
+        Parlons du parcours de votre enfant
+      </h2>
+      <p class="text-ink/70 mt-8 text-[15.5px] leading-relaxed">Notre équipe vous répond sous 24h pour organiser un premier échange et un bilan pédagogique gratuit.</p>
+
+      <ul class="mt-9 space-y-5">
+        <li class="flex items-start gap-4">
+          <div class="w-11 h-11 rounded-full bg-mist grid place-items-center shrink-0">
+            <svg width="19" height="19" viewBox="0 0 24 24" fill="none"><path d="M21 10c0 6-9 12-9 12S3 16 3 10a9 9 0 1118 0z" stroke="#1B1464" stroke-width="1.8"/><circle cx="12" cy="10" r="2.6" stroke="#1B1464" stroke-width="1.8"/></svg>
+          </div>
+          <div>
+            <p class="font-bold text-navy text-sm">Adresse</p>
+            <p class="text-ink/60 text-sm mt-0.5">Avenue Mohammed V, Kénitra, Maroc</p>
+          </div>
+        </li>
+        <li class="flex items-start gap-4">
+          <div class="w-11 h-11 rounded-full bg-mist grid place-items-center shrink-0">
+            <svg width="19" height="19" viewBox="0 0 24 24" fill="none"><path d="M4 5h16v14H4z" stroke="#1B1464" stroke-width="1.8"/><path d="M4 7l8 6 8-6" stroke="#1B1464" stroke-width="1.8" stroke-linecap="round"/></svg>
+          </div>
+          <div>
+            <p class="font-bold text-navy text-sm">Email</p>
+            <p class="text-ink/60 text-sm mt-0.5">contact@diwanealmaaref.ma</p>
+          </div>
+        </li>
+        <li class="flex items-start gap-4">
+          <div class="w-11 h-11 rounded-full bg-mist grid place-items-center shrink-0">
+            <svg width="19" height="19" viewBox="0 0 24 24" fill="none"><path d="M22 16.9v2.5a2 2 0 01-2.2 2 19.8 19.8 0 01-8.6-3 19.5 19.5 0 01-6-6 19.8 19.8 0 01-3-8.7A2 2 0 014.1 2h2.5a2 2 0 012 1.7c.1.9.3 1.8.6 2.7a2 2 0 01-.5 2.1L7.6 9.6a16 16 0 006 6l1.1-1.1a2 2 0 012.1-.5c.9.3 1.8.5 2.7.6a2 2 0 011.7 2.1z" stroke="#1B1464" stroke-width="1.8" stroke-linejoin="round"/></svg>
+          </div>
+          <div>
+            <p class="font-bold text-navy text-sm">Téléphone</p>
+            <p class="text-ink/60 text-sm mt-0.5">+212 5XX-XXXXXX</p>
+          </div>
+        </li>
+      </ul>
+
+      <div class="flex items-center gap-3 mt-9">
+        <a href="#" aria-label="Facebook" class="w-10 h-10 rounded-full bg-navy text-white grid place-items-center hover:bg-gold hover:text-navy-900 transition-colors">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M22 12a10 10 0 10-11.6 9.9v-7H7.9V12h2.5V9.8c0-2.5 1.5-3.9 3.8-3.9 1.1 0 2.2.2 2.2.2v2.4h-1.3c-1.2 0-1.6.8-1.6 1.6V12h2.8l-.4 2.9h-2.4v7A10 10 0 0022 12z"/></svg>
+        </a>
+        <a href="#" aria-label="Instagram" class="w-10 h-10 rounded-full bg-navy text-white grid place-items-center hover:bg-gold hover:text-navy-900 transition-colors">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.2" cy="6.8" r="1"/></svg>
+        </a>
+        <a href="#" aria-label="WhatsApp" class="w-10 h-10 rounded-full bg-navy text-white grid place-items-center hover:bg-gold hover:text-navy-900 transition-colors">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2a10 10 0 00-8.6 15L2 22l5.2-1.4A10 10 0 1012 2zm5.7 14.3c-.2.6-1.3 1.2-1.8 1.3-.5.1-1 .2-3.4-.8-2.8-1.2-4.7-4-4.8-4.2-.1-.2-1.1-1.5-1.1-2.8 0-1.3.7-2 1-2.2.2-.3.5-.3.7-.3h.5c.2 0 .4 0 .6.5l.8 2c.1.2.1.4 0 .6l-.4.5c-.1.2-.3.3-.1.6.2.3.9 1.5 2 2.4 1.3 1.2 2.4 1.5 2.7 1.7.3.1.5.1.7-.1l.6-.7c.2-.3.4-.2.7-.1l1.8.9c.2.1.4.2.5.3.1.2.1.9-.1 1.4z"/></svg>
+        </a>
+      </div>
+    </div>
+
+    <div class="reveal lg:col-span-3 grid gap-6">
+      <form id="contactForm" class="bg-mist rounded-3xl border border-line p-7 sm:p-9 grid sm:grid-cols-2 gap-5" novalidate>
+        <div class="sm:col-span-1">
+          <label for="fullname" class="block text-xs font-bold text-navy uppercase tracking-wide mb-2">Nom complet</label>
+          <input id="fullname" name="fullname" type="text" required placeholder="Votre nom" class="w-full rounded-xl border border-line bg-white px-4 py-3 text-sm placeholder:text-ink/35 focus:border-gold outline-none">
+        </div>
+        <div class="sm:col-span-1">
+          <label for="phone" class="block text-xs font-bold text-navy uppercase tracking-wide mb-2">Téléphone</label>
+          <input id="phone" name="phone" type="tel" required placeholder="+212 6XX-XXXXXX" class="w-full rounded-xl border border-line bg-white px-4 py-3 text-sm placeholder:text-ink/35 focus:border-gold outline-none">
+        </div>
+        <div class="sm:col-span-2">
+          <label for="email" class="block text-xs font-bold text-navy uppercase tracking-wide mb-2">Email</label>
+          <input id="email" name="email" type="email" required placeholder="vous@email.com" class="w-full rounded-xl border border-line bg-white px-4 py-3 text-sm placeholder:text-ink/35 focus:border-gold outline-none">
+        </div>
+        <div class="sm:col-span-2">
+          <label for="level" class="block text-xs font-bold text-navy uppercase tracking-wide mb-2">Niveau concerné</label>
+          <select id="level" name="level" class="w-full rounded-xl border border-line bg-white px-4 py-3 text-sm focus:border-gold outline-none">
+            <option>Primaire</option>
+            <option>Collège</option>
+            <option>Lycée</option>
+            <option>Préparation Examens</option>
+          </select>
+        </div>
+        <div class="sm:col-span-2">
+          <label for="message" class="block text-xs font-bold text-navy uppercase tracking-wide mb-2">Message</label>
+          <textarea id="message" name="message" rows="4" required placeholder="Parlez-nous du besoin de votre enfant..." class="w-full rounded-xl border border-line bg-white px-4 py-3 text-sm placeholder:text-ink/35 focus:border-gold outline-none resize-none"></textarea>
+        </div>
+        <div class="sm:col-span-2 flex items-center justify-between flex-wrap gap-4">
+          <p id="formStatus" class="text-sm font-semibold text-navy/0" aria-live="polite"></p>
+          <button type="submit" class="inline-flex items-center gap-2 bg-navy hover:bg-navy-700 text-white font-bold px-7 py-3.5 rounded-full transition-colors">
+            Envoyer la demande
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none"><path d="M5 12h14M13 6l6 6-6 6" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </button>
+        </div>
+      </form>
+
+      <div class="rounded-3xl overflow-hidden border border-line h-64">
+        <iframe
+          title="Localisation RIHANIO — Kénitra"
+          src="https://www.google.com/maps?q=K%C3%A9nitra%2C%20Morocco&output=embed"
+          class="w-full h-full grayscale-[15%]"
+          style="border:0;"
+          loading="lazy"
+          referrerpolicy="no-referrer-when-downgrade">
+        </iframe>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= FOOTER ================= -->
+<footer class="bg-navy-900 text-white pt-20 pb-8 relative overflow-hidden">
+  <div class="sunburst opacity-[0.05]">
+    <svg viewBox="0 0 800 400" fill="none">
+      <g stroke="#F0A93C" stroke-width="1.5">
+        <line x1="400" y1="400" x2="400" y2="60"/>
+        <line x1="400" y1="400" x2="150" y2="120"/>
+        <line x1="400" y1="400" x2="650" y2="120"/>
+        <line x1="400" y1="400" x2="60" y2="260"/>
+        <line x1="400" y1="400" x2="740" y2="260"/>
+      </g>
+    </svg>
+  </div>
+
+  <div class="max-w-7xl mx-auto px-5 sm:px-8 relative">
+    <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-12">
+
+      <div>
+        <a href="#accueil" class="flex items-center gap-3 mb-5">
+          <img src="logo.png" alt="Logo RIHANIO" class="h-12 w-12 object-contain">
+          <span class="font-display font-semibold text-lg">RIHANIO</span>
+        </a>
+        <p class="text-white/55 text-sm leading-relaxed">INSTITUTION PRIVÉE Dédiée à l'encadrement, au suivi pédagogique et à la réussite de chaque élève, du primaire au baccalauréat.</p>
+      </div>
+
+      <div>
+        <h4 class="font-display font-semibold text-base mb-5">Navigation</h4>
+        <ul class="space-y-3 text-sm text-white/60">
+          <li><a href="#apropos" class="hover:text-gold transition-colors">À propos</a></li>
+          <li><a href="#programmes" class="hover:text-gold transition-colors">Nos Programmes</a></li>
+          <li><a href="#emploi-du-temps" class="hover:text-gold transition-colors">Emploi du Temps</a></li>
+          <li><a href="#calendrier" class="hover:text-gold transition-colors">Calendrier</a></li>
+          <li><a href="#temoignages" class="hover:text-gold transition-colors">Témoignages</a></li>
+        </ul>
+      </div>
+
+      <div>
+        <h4 class="font-display font-semibold text-base mb-5">Programmes</h4>
+        <ul class="space-y-3 text-sm text-white/60">
+          <li>Primaire</li>
+          <li>Collège</li>
+          <li>Lycée</li>
+          <li>Préparation Examens</li>
+        </ul>
+      </div>
+
+      <div>
+        <h4 class="font-display font-semibold text-base mb-5">Contact</h4>
+        <ul class="space-y-3 text-sm text-white/60">
+          <li>Avenue Mohammed V, Kénitra</li>
+          <li>contact@diwanealmaaref.ma</li>
+          <li>+212 522-456789</li>
+        </ul>
+        <div class="flex items-center gap-3 mt-5">
+          <a href="#" aria-label="Facebook" class="w-9 h-9 rounded-full bg-white/10 grid place-items-center hover:bg-gold hover:text-navy-900 transition-colors">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M22 12a10 10 0 10-11.6 9.9v-7H7.9V12h2.5V9.8c0-2.5 1.5-3.9 3.8-3.9 1.1 0 2.2.2 2.2.2v2.4h-1.3c-1.2 0-1.6.8-1.6 1.6V12h2.8l-.4 2.9h-2.4v7A10 10 0 0022 12z"/></svg>
+          </a>
+          <a href="#" aria-label="Instagram" class="w-9 h-9 rounded-full bg-white/10 grid place-items-center hover:bg-gold hover:text-navy-900 transition-colors">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.2" cy="6.8" r="1"/></svg>
+          </a>
+          <a href="#" aria-label="WhatsApp" class="w-9 h-9 rounded-full bg-white/10 grid place-items-center hover:bg-gold hover:text-navy-900 transition-colors">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2a10 10 0 00-8.6 15L2 22l5.2-1.4A10 10 0 1012 2zm5.7 14.3c-.2.6-1.3 1.2-1.8 1.3-.5.1-1 .2-3.4-.8-2.8-1.2-4.7-4-4.8-4.2-.1-.2-1.1-1.5-1.1-2.8 0-1.3.7-2 1-2.2.2-.3.5-.3.7-.3h.5c.2 0 .4 0 .6.5l.8 2c.1.2.1.4 0 .6l-.4.5c-.1.2-.3.3-.1.6.2.3.9 1.5 2 2.4 1.3 1.2 2.4 1.5 2.7 1.7.3.1.5.1.7-.1l.6-.7c.2-.3.4-.2.7-.1l1.8.9c.2.1.4.2.5.3.1.2.1.9-.1 1.4z"/></svg>
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <div class="border-t border-white/10 mt-14 pt-7 flex flex-col sm:flex-row items-center justify-between gap-3 text-xs text-white/40">
+      <p>© <span id="year"></span> RIHANIO — INSTITUTION PRIVÉE. Tous droits réservés.</p>
+      <p class="flex items-center gap-4">
+        <span>Conçu avec rigueur, à Kénitra.</span>
+      </p>
+    </div>
+  </div>
+</footer>
+
+<script>
+  // Year
+  document.getElementById('year').textContent = new Date().getFullYear();
+
+  // Mobile menu
+  const menuBtn = document.getElementById('menuBtn');
+  const mobileMenu = document.getElementById('mobileMenu');
+  menuBtn.addEventListener('click', () => {
+    const isHidden = mobileMenu.classList.contains('hidden');
+    mobileMenu.classList.toggle('hidden');
+    menuBtn.setAttribute('aria-expanded', isHidden ? 'true' : 'false');
+  });
+  mobileMenu.querySelectorAll('a').forEach(a => a.addEventListener('click', () => {
+    mobileMenu.classList.add('hidden');
+    menuBtn.setAttribute('aria-expanded', 'false');
+  }));
+
+  // Sticky header shadow
+  const header = document.getElementById('siteHeader');
+  window.addEventListener('scroll', () => {
+    header.classList.toggle('nav-shadow', window.scrollY > 12);
+  });
+
+  // Reveal on scroll
+  const revealEls = document.querySelectorAll('.reveal');
+  const io = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('is-visible');
+        io.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.12 });
+  revealEls.forEach(el => io.observe(el));
+
+  // Compteurs animés (0 -> valeur finale) pour la section "Pourquoi nous choisir"
+  const statEls = document.querySelectorAll('.stat-num');
+  function animateCount(el) {
+    const raw = el.textContent.trim();
+    const match = raw.match(/^([\d\s.,]+)(.*)$/); // ex: "1200" + "+", "95" + "%"
+    if (!match) return;
+    const target = parseInt(match[1].replace(/[^\d]/g, ''), 10);
+    const suffix = match[2] || '';
+    if (isNaN(target)) return;
+
+    const duration = 1600; // ms
+    const startTime = performance.now();
+    function easeOutExpo(t) { return t === 1 ? 1 : 1 - Math.pow(2, -10 * t); }
+
+    function tick(now) {
+      const progress = Math.min((now - startTime) / duration, 1);
+      const eased = easeOutExpo(progress);
+      const current = Math.round(target * eased);
+      el.textContent = current.toLocaleString('fr-FR') + suffix;
+      if (progress < 1) {
+        requestAnimationFrame(tick);
+      } else {
+        el.textContent = target.toLocaleString('fr-FR') + suffix; // valeur exacte finale
+      }
+    }
+    requestAnimationFrame(tick);
+  }
+
+  const statIo = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        animateCount(entry.target);
+        statIo.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.4 });
+  statEls.forEach(el => statIo.observe(el));
+
+  // Hero carousel
+  document.addEventListener('DOMContentLoaded', () => {
+    new Splide('.splide', {
+      type: 'fade',
+      rewind: true,
+      autoplay: true,
+      interval: 5500,
+      speed: 1000,
+      arrows: true,
+      pagination: true,
+      pauseOnHover: false,
+    }).mount();
+  });
+
+  // Contact form (client-side only)
+  const form = document.getElementById('contactForm');
+  const status = document.getElementById('formStatus');
+  form.addEventListener('submit', (e) => {
+    e.preventDefault();
+    if (!form.checkValidity()) {
+      status.textContent = "Merci de compléter tous les champs requis.";
+      status.classList.remove('text-navy/0');
+      status.classList.add('text-red-600');
+      return;
+    }
+    status.classList.remove('text-red-600');
+    status.classList.add('text-navy');
+    status.textContent = "Merci ! Votre demande a bien été envoyée, nous vous répondrons sous 24h.";
+    form.reset();
+  });
+</script>
+
+<script type="module">
+  import { db, collection, getDocs } from './supabase-config.js';
+
+  const listEl        = document.getElementById('actualitesList');
+  const viewportEl     = document.getElementById('actualitesViewport');
+  const stripWrap        = document.getElementById('actualitesStrip');
+  const loadingEl          = document.getElementById('actualitesLoading');
+  const emptyEl             = document.getElementById('actualitesEmpty');
+  const progressFill         = document.getElementById('actualitesProgress');
+  const arrowPrevBtn           = document.getElementById('actuArrowPrev');
+  const arrowNextBtn            = document.getElementById('actuArrowNext');
+
+  const modal          = document.getElementById('actualiteModal');
+  const modalImage      = document.getElementById('modalActuImage');
+  const modalDate        = document.getElementById('modalActuDate');
+  const modalTitre        = document.getElementById('modalActuTitre');
+  const modalContenu       = document.getElementById('modalActuContenu');
+  const closeModalBtn      = document.getElementById('closeActuModalBtn');
+
+  function formatDate(dateStr) {
+    if (!dateStr) return '';
+    const d = new Date(dateStr);
+    if (isNaN(d.getTime())) return '';
+    return d.toLocaleDateString('fr-FR', { day: 'numeric', month: 'long', year: 'numeric' });
+  }
+
+  function openActuModal(item) {
+    if (item.imageURL) {
+      modalImage.src = item.imageURL;
+      modalImage.alt = item.titre || '';
+      modalImage.classList.remove('hidden');
+    } else {
+      modalImage.classList.add('hidden');
+    }
+    modalDate.textContent = formatDate(item.datePublication) || 'Annonce';
+    modalTitre.textContent = item.titre || '';
+    modalContenu.textContent = item.contenu || '';
+    modal.classList.remove('hidden');
+    document.body.style.overflow = 'hidden';
+  }
+
+  function closeActuModal() {
+    modal.classList.add('hidden');
+    document.body.style.overflow = '';
+  }
+  closeModalBtn.addEventListener('click', closeActuModal);
+  modal.addEventListener('click', (e) => { if (e.target === modal) closeActuModal(); });
+  document.addEventListener('keydown', (e) => { if (e.key === 'Escape') closeActuModal(); });
+
+  function cardHtml(item, index) {
+    if (item.imageURL) {
+      return `
+        <button type="button" data-index="${index}" class="actu-card shrink-0 w-[80vw] xs:w-72 sm:w-80 text-left bg-white border border-line rounded-3xl overflow-hidden shadow-sm flex flex-col">
+          <div class="h-44 overflow-hidden bg-mist flex items-center justify-center pointer-events-none">
+            <img src="${item.imageURL}" alt="${item.titre || ''}" class="w-full h-full object-contain" draggable="false">
+          </div>
+          <div class="p-6 flex flex-col gap-2 flex-1 pointer-events-none">
+            <span class="text-[11px] font-extrabold uppercase tracking-wide text-gold-dark">${formatDate(item.datePublication) || 'Annonce'}</span>
+            <h3 class="font-display font-semibold text-navy text-lg leading-snug">${item.titre || ''}</h3>
+            <p class="actu-line-clamp text-ink/55 text-sm leading-relaxed">${item.contenu || ''}</p>
+            <span class="mt-auto pt-2 inline-flex items-center gap-1.5 text-xs font-extrabold text-purple">
+              Lire plus
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none"><path d="M5 12h14M13 6l6 6-6 6" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </span>
+          </div>
+        </button>
+      `;
+    }
+    // Annonce texte seul (sans image) : carte compacte, fond dégradé navy/purple
+    return `
+      <button type="button" data-index="${index}" class="actu-card shrink-0 w-[80vw] xs:w-72 sm:w-80 text-left bg-gradient-to-br from-navy to-purple rounded-3xl overflow-hidden shadow-sm flex flex-col p-6 gap-3">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" class="pointer-events-none"><path d="M4 4h16v12H7l-3 3V4z" stroke="#F0A93C" stroke-width="1.8" stroke-linejoin="round"/></svg>
+        <div class="flex flex-col gap-2 pointer-events-none">
+          <span class="text-[11px] font-extrabold uppercase tracking-wide text-gold-light">${formatDate(item.datePublication) || 'Annonce'}</span>
+          <h3 class="font-display font-semibold text-white text-lg leading-snug">${item.titre || ''}</h3>
+          <p class="actu-line-clamp text-white/70 text-sm leading-relaxed">${item.contenu || ''}</p>
+          <span class="mt-auto pt-2 inline-flex items-center gap-1.5 text-xs font-extrabold text-gold-light">
+            Lire plus
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none"><path d="M5 12h14M13 6l6 6-6 6" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </span>
+        </div>
+      </button>
+    `;
+  }
+
+  /* =====================================================================
+     Drag-to-scroll + momentum (souris + tactile via Pointer Events).
+     Règle exacte :
+     - Au chargement : défilement automatique jusqu'à l'extrême droite,
+       donc la DERNIÈRE carte du DOM (= l'annonce la plus récente, car les
+       items sont triés par ordre croissant de date) est visible en premier.
+     - Glisser vers la DROITE  -> scrollLeft diminue -> révèle les
+       annonces plus anciennes, une à une, vers la gauche.
+     - Glisser vers la GAUCHE  -> scrollLeft augmente -> revient vers
+       l'annonce la plus récente (déjà la position de départ).
+     - Arrêt strict à scrollLeft = 0 (plus ancienne annonce) : aucun
+       rebond, aucune boucle infinie.
+     ===================================================================== */
+  function initDragStrip() {
+    function maxScroll() {
+      return Math.max(0, listEl.scrollWidth - viewportEl.clientWidth);
+    }
+    function clamp(v, min, max) { return Math.min(Math.max(v, min), max); }
+    function updateProgress() {
+      const max = maxScroll();
+      const pct = max === 0 ? 100 : (1 - (viewportEl.scrollLeft / max)) * 100;
+      progressFill.style.width = clamp(pct, 0, 100) + '%';
+    }
+
+    // Position initiale : tout à droite, pour afficher l'annonce la plus récente
+    requestAnimationFrame(() => {
+      viewportEl.scrollLeft = maxScroll();
+      updateProgress();
+    });
+    window.addEventListener('resize', () => {
+      viewportEl.scrollLeft = clamp(viewportEl.scrollLeft, 0, maxScroll());
+      updateProgress();
+    });
+
+    let isDragging       = false;
+    let dragStartX        = 0;
+    let scrollAtDragStart  = 0;
+    let lastMoveX           = 0;
+    let lastMoveTime         = 0;
+    let velocity              = 0;
+    let momentumFrame          = null;
+    let dragMoved                = false; // distingue un clic d'un glissement
+    let pressedCard               = null; // carte pressée, pour ouvrir la modale au relâchement
+
+    const FRICTION = 0.94;
+    const MIN_VELOCITY = 0.02;
+    const CLICK_THRESHOLD = 6; // px
+
+    function stopMomentum() {
+      if (momentumFrame) { cancelAnimationFrame(momentumFrame); momentumFrame = null; }
+    }
+
+    function onPointerDown(e) {
+      if (e.button !== undefined && e.button !== 0) return;
+      stopMomentum();
+      isDragging = true;
+      dragMoved = false;
+      listEl.classList.add('cursor-grabbing');
+      listEl.classList.remove('cursor-grab');
+
+      dragStartX        = e.clientX;
+      scrollAtDragStart  = viewportEl.scrollLeft;
+      lastMoveX          = e.clientX;
+      lastMoveTime        = performance.now();
+      velocity             = 0;
+      pressedCard         = e.target.closest('.actu-card');
+      listEl.setPointerCapture(e.pointerId);
+    }
+
+    function onPointerMove(e) {
+      if (!isDragging) return;
+      const now = performance.now();
+      const dx  = e.clientX - dragStartX;
+
+      if (Math.abs(dx) > CLICK_THRESHOLD) dragMoved = true;
+
+      // Glisser vers la droite (dx > 0) -> scrollLeft diminue -> annonces plus anciennes
+      const proposed = scrollAtDragStart - dx;
+      viewportEl.scrollLeft = clamp(proposed, 0, maxScroll());
+
+      const dt = now - lastMoveTime;
+      if (dt > 0) {
+        const segmentVelocity = -(e.clientX - lastMoveX) / dt;
+        velocity = velocity * 0.7 + segmentVelocity * 0.3;
+      }
+      lastMoveX   = e.clientX;
+      lastMoveTime = now;
+      updateProgress();
+    }
+
+    function onPointerUp(e) {
+      if (!isDragging) return;
+      isDragging = false;
+      listEl.classList.remove('cursor-grabbing');
+      listEl.classList.add('cursor-grab');
+      try { listEl.releasePointerCapture(e.pointerId); } catch (err) {}
+
+      if (!dragMoved && pressedCard) {
+        const idx = Number(pressedCard.getAttribute('data-index'));
+        openActuModal(currentItems[idx]);
+      }
+      pressedCard = null;
+
+      startMomentum();
+    }
+
+    function startMomentum() {
+      if (Math.abs(velocity) < MIN_VELOCITY) return;
+      let lastTime = performance.now();
+      function step(now) {
+        const dt = now - lastTime;
+        lastTime = now;
+        viewportEl.scrollLeft = clamp(viewportEl.scrollLeft + velocity * dt, 0, maxScroll());
+        velocity *= FRICTION;
+        updateProgress();
+        const atLeftEdge  = viewportEl.scrollLeft <= 0;
+        const atRightEdge = viewportEl.scrollLeft >= maxScroll();
+        if ((atLeftEdge && velocity < 0) || (atRightEdge && velocity > 0) || Math.abs(velocity) < MIN_VELOCITY) {
+          momentumFrame = null;
+          return;
+        }
+        momentumFrame = requestAnimationFrame(step);
+      }
+      momentumFrame = requestAnimationFrame(step);
+    }
+
+    listEl.addEventListener('pointerdown', onPointerDown);
+    listEl.addEventListener('pointermove', onPointerMove);
+    listEl.addEventListener('pointerup', onPointerUp);
+    listEl.addEventListener('pointercancel', onPointerUp);
+    listEl.addEventListener('pointerleave', (e) => { if (isDragging) onPointerUp(e); });
+    listEl.addEventListener('dragstart', (e) => e.preventDefault());
+
+    viewportEl.addEventListener('wheel', (e) => {
+      // Si le geste est principalement vertical (molette de souris classique),
+      // on laisse la page défiler normalement (pas de preventDefault).
+      if (Math.abs(e.deltaX) <= Math.abs(e.deltaY)) return;
+      // Geste horizontal réel (trackpad, souris avec molette latérale) :
+      // on fait défiler le strip d'annonces à la place.
+      e.preventDefault();
+      stopMomentum();
+      viewportEl.scrollLeft = clamp(viewportEl.scrollLeft + e.deltaX, 0, maxScroll());
+      updateProgress();
+    }, { passive: false });
+
+    arrowPrevBtn.addEventListener('click', () => {
+      stopMomentum();
+      viewportEl.scrollTo({ left: clamp(viewportEl.scrollLeft - 320, 0, maxScroll()), behavior: 'smooth' });
+      setTimeout(updateProgress, 350);
+    });
+    arrowNextBtn.addEventListener('click', () => {
+      stopMomentum();
+      viewportEl.scrollTo({ left: clamp(viewportEl.scrollLeft + 320, 0, maxScroll()), behavior: 'smooth' });
+      setTimeout(updateProgress, 350);
+    });
+
+    // Sécurité : empêche le comportement par défaut du bouton au clic
+    // (l'ouverture de la modale est désormais gérée dans onPointerUp,
+    // ce qui évite les soucis de "click" supprimé par setPointerCapture
+    // sur certains navigateurs comme Safari/iOS).
+    listEl.querySelectorAll('.actu-card').forEach((btn) => {
+      btn.addEventListener('click', (e) => e.preventDefault());
+    });
+  }
+
+  let currentItems = [];
+
+  (async () => {
+    let items = [];
+    try {
+      const snap = await getDocs(collection(db, 'announcements'));
+      items = snap.docs
+        .map((d) => ({ id: d.id, ...d.data() }))
+        .filter((a) => a.publie !== false)
+        // Ordre croissant (plus ancienne -> plus récente) : la plus récente
+        // se retrouve en dernier dans le DOM, à l'extrême droite du strip.
+        .sort((a, b) => new Date(a.datePublication || a.createdAt || 0) - new Date(b.datePublication || b.createdAt || 0));
+    } catch (e) {
+      items = [];
+    }
+
+    loadingEl.classList.add('hidden');
+
+    if (items.length === 0) {
+      emptyEl.classList.remove('hidden');
+      return;
+    }
+
+    currentItems = items;
+    listEl.innerHTML = items.map((item, i) => cardHtml(item, i)).join('');
+    stripWrap.classList.remove('hidden');
+
+    initDragStrip();
+  })();
+</script>
+</body>
+</html>
