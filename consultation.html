@@ -121,7 +121,6 @@
     </form>
   </div>
 
-  <!-- NOT FOUND -->
   <div id="notFoundCard" class="hidden w-full max-w-sm bg-white border border-line rounded-3xl shadow-xl p-8 sm:p-10 text-center fade-in">
     <svg width="44" height="44" viewBox="0 0 24 24" fill="none" class="mx-auto mb-4"><circle cx="11" cy="11" r="7" stroke="#5B3AA6" stroke-width="1.6"/><path d="M21 21l-4-4" stroke="#5B3AA6" stroke-width="1.6" stroke-linecap="round"/><path d="M8 11h6" stroke="#5B3AA6" stroke-width="1.6" stroke-linecap="round"/></svg>
     <p class="text-navy font-bold mb-1">Aucune demande trouvée</p>
@@ -129,7 +128,6 @@
     <button id="retryFromNotFound" class="text-sm font-bold text-navy/70 hover:text-gold-dark border border-line rounded-full px-5 py-2.5 transition-colors">Réessayer</button>
   </div>
 
-  <!-- MULTI MATCH PICKER -->
   <div id="pickerCard" class="hidden w-full max-w-sm bg-white border border-line rounded-3xl shadow-xl p-6 sm:p-8 fade-in">
     <p class="text-navy font-bold text-sm mb-1">Plusieurs dossiers trouvés</p>
     <p class="text-ink/45 text-xs mb-5">Sélectionnez le bon matricule ci-dessous</p>
@@ -137,7 +135,6 @@
     <button id="retryFromPicker" class="mt-5 w-full text-sm font-bold text-navy/70 hover:text-gold-dark border border-line rounded-full px-5 py-2.5 transition-colors">Nouvelle recherche</button>
   </div>
 
-  <!-- RESULT CARD -->
   <div id="resultCard" class="hidden w-full max-w-md fade-in">
     <div class="bg-white border border-line rounded-3xl shadow-xl overflow-hidden">
 
@@ -171,7 +168,6 @@
           </div>
         </div>
 
-        <!-- Bloc identifiants de connexion, visible uniquement si le dossier est accepté -->
         <div id="loginCredsWrap" class="hidden w-full mt-6 text-left">
           <button id="showLoginCredsBtn" type="button" class="w-full inline-flex items-center justify-center gap-2 bg-emerald-50 hover:bg-emerald-100 text-emerald-700 font-extrabold text-xs px-5 py-3 rounded-2xl transition-colors border border-emerald-200">
             <svg width="15" height="15" viewBox="0 0 24 24" fill="none"><rect x="4" y="10" width="16" height="10" rx="2" stroke="currentColor" stroke-width="1.8"/><path d="M8 10V7a4 4 0 118 0v3" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
@@ -205,9 +201,6 @@
 </div>
 
 <script type="module">
-// ---------------------------------------------------------------------------
-// MODE DÉMO — recherche sur un jeu de données fictif en mémoire.
-// ---------------------------------------------------------------------------
 
 const DEMO_STUDENTS = [
   { id: 'DAM-2026-014', prenom: 'Yasmine', nom: 'El Amrani', statut: 'En attente', dateNaissance: '2015-03-11', genre: 'F', niveau: 'CM1', photoURL: '' },
@@ -481,10 +474,7 @@ function buildAndDownloadPdf(r) {
 }
 </script>
   <script>
-  // ---------------------------------------------------------------------------
-  // Protection basique : désactive le clic droit et les raccourcis DevTools.
-  // (Dissuasion uniquement — ne bloque pas un utilisateur déterminé.)
-  // ---------------------------------------------------------------------------
+ 
   document.addEventListener('contextmenu', (e) => e.preventDefault());
 
   document.addEventListener('keydown', (e) => {
