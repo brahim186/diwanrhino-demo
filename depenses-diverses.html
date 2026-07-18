@@ -85,7 +85,6 @@
   .combobox-chevron { transition: transform .2s ease; }
   .combobox-open .combobox-chevron { transform: rotate(180deg); }
 
-  /* ---------- Barre latérale rétractable ---------- */
   .side-nav {
     position: fixed; top: 0; left: 0; height: 100vh; width: 72px;
     background: #ffffff; border-right: 1px solid #E7E2F3; z-index: 50;
@@ -157,7 +156,6 @@
 </nav>
 
 
-<!-- Écran affiché si aucune session admin active -->
 <div id="noSessionGate" class="hidden min-h-screen flex items-center justify-center px-5">
   <div class="w-full max-w-sm bg-white border border-line rounded-3xl shadow-xl p-8 sm:p-10 text-center">
     <img src="logo.png" alt="Logo RIHANIO" class="h-16 w-16 object-contain mb-5 mx-auto">
@@ -203,7 +201,6 @@
       </div>
     </div>
 
-    <!-- KPI -->
     <section class="grid sm:grid-cols-3 gap-4">
       <div class="bg-white border border-line rounded-2xl p-5">
         <p class="text-[11px] font-extrabold uppercase tracking-wide text-ink/40 mb-1.5">Total du mois</p>
@@ -219,12 +216,10 @@
       </div>
     </section>
 
-    <!-- Formulaire d'ajout -->
     <section class="bg-white border border-line rounded-3xl shadow-sm p-6 sm:p-8">
       <h3 class="font-display font-semibold text-navy text-lg mb-5">Ajouter une dépense</h3>
       <form id="expenseForm" class="grid sm:grid-cols-2 lg:grid-cols-5 gap-4 items-end">
 
-        <!-- Combobox catégorie / sous-catégorie -->
         <div class="lg:col-span-2 relative">
           <label class="block text-navy text-xs font-extrabold tracking-wide uppercase mb-2">Sous-catégorie</label>
           <button type="button" id="categoryToggle"
@@ -273,7 +268,6 @@
       <p id="formError" class="hidden mt-4 text-xs font-bold text-rose-600 bg-rose-50 border border-rose-200 rounded-xl px-4 py-3"></p>
     </section>
 
-    <!-- Liste des dépenses -->
     <section class="bg-white border border-line rounded-3xl shadow-sm overflow-hidden">
       <div class="px-6 sm:px-8 py-6 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 border-b border-line">
         <h3 class="font-display font-semibold text-navy text-lg">Historique des dépenses</h3>
@@ -331,9 +325,7 @@
 <div id="toastWrap" class="fixed bottom-6 inset-x-0 flex justify-center pointer-events-none z-50"></div>
 
 <script type="module">
-// ---------------------------------------------------------------------------
-// MODE DÉMO — aucune base de données réelle, données stockées en mémoire.
-// ---------------------------------------------------------------------------
+
 
 document.getElementById('dashboard').classList.remove('hidden');
 document.getElementById('noSessionGate').classList.add('hidden');
@@ -377,7 +369,6 @@ function findCategoryOf(sousCategorie) {
   return null;
 }
 
-// --- Combobox catégorie / sous-catégorie ------------------------------------------
 const categoryToggle = document.getElementById('categoryToggle');
 const categoryToggleLabel = document.getElementById('categoryToggleLabel');
 const categoryPanel = document.getElementById('categoryPanel');
@@ -443,7 +434,6 @@ document.addEventListener('click', (e) => {
   if (!categoryPanel.contains(e.target) && !categoryToggle.contains(e.target)) closeCategoryPanel();
 });
 
-// --- Filtres période (liste) -------------------------------------------------------
 const monthSelect = document.getElementById('monthSelect');
 const yearSelect = document.getElementById('yearSelect');
 const now = new Date();
@@ -496,7 +486,6 @@ async function loadExpenses() {
   loadingState.classList.remove('hidden');
   table.classList.add('hidden');
 
-  // Démo : simple délai simulé, données déjà en mémoire
   await new Promise((r) => setTimeout(r, 300));
 
   loadingState.classList.add('hidden');
@@ -563,7 +552,6 @@ function renderList() {
     });
   }
 
-  // KPI (sur la période sélectionnée, avant filtre de recherche)
   const annee = parseInt(yearSelect.value, 10);
   const mois = parseInt(monthSelect.value, 10);
   const periodRows = allExpenses.filter((e) => e.annee === annee && e.mois === mois);
@@ -583,7 +571,6 @@ monthSelect.addEventListener('change', renderList);
 yearSelect.addEventListener('change', renderList);
 document.getElementById('listSearchInput').addEventListener('input', renderList);
 
-// --- Export Excel / PDF (données affichées, période + recherche en cours) -----------
 function exportFileName(ext) {
   const mois = MONTHS[parseInt(monthSelect.value, 10) - 1];
   return `depenses_${mois}_${yearSelect.value}.${ext}`;
@@ -630,11 +617,7 @@ document.getElementById('exportPdfBtn').addEventListener('click', () => {
   pdf.save(exportFileName('pdf'));
 });
 
-// --- Import Excel / CSV --------------------------------------------------------------
-// Colonnes attendues (en-têtes, insensibles à la casse) : Date, Sous-catégorie,
-// Description (optionnel), Montant. La catégorie est déduite automatiquement de la
-// sous-catégorie ; toute ligne dont la sous-catégorie ne correspond à aucune des
-// sous-catégories connues est ignorée et signalée dans le résumé d'import.
+
 const importBtn = document.getElementById('importBtn');
 const importFileInput = document.getElementById('importFileInput');
 const importSummary = document.getElementById('importSummary');
@@ -712,7 +695,6 @@ importFileInput.addEventListener('change', async (e) => {
   }
 });
 
-// --- Ajout d'une dépense -----------------------------------------------------------
 const form = document.getElementById('expenseForm');
 const formError = document.getElementById('formError');
 const submitBtn = document.getElementById('submitBtn');
@@ -759,7 +741,6 @@ form.addEventListener('submit', async (e) => {
   try {
     allExpenses.push({ id, ...dataObj });
 
-    // Réinitialiser le formulaire
     selectedSousCategorie = null;
     categoryToggleLabel.textContent = 'Choisir une sous-catégorie...';
     categoryToggleLabel.classList.add('text-ink/40');
@@ -767,7 +748,6 @@ form.addEventListener('submit', async (e) => {
     document.getElementById('expenseDescription').value = '';
     document.getElementById('expenseDate').value = now.toISOString().slice(0, 10);
 
-    // Aligner les filtres sur la période de la dépense ajoutée pour la voir apparaître
     monthSelect.value = dataObj.mois;
     yearSelect.value = dataObj.annee;
     renderList();
@@ -850,10 +830,7 @@ document.getElementById('logoutBtn').addEventListener('click', () => {
 </script>
 
 <script>
-  // ---------------------------------------------------------------------------
-  // Protection basique : désactive le clic droit et les raccourcis DevTools.
-  // (Dissuasion uniquement — ne bloque pas un utilisateur déterminé.)
-  // ---------------------------------------------------------------------------
+  
   document.addEventListener('contextmenu', (e) => e.preventDefault());
 
   document.addEventListener('keydown', (e) => {
