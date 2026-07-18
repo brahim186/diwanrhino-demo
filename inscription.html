@@ -529,5 +529,24 @@ form.addEventListener('submit', async (e) => {
   }
 });
 </script>
+  <script>
+  // ---------------------------------------------------------------------------
+  // Protection basique : désactive le clic droit et les raccourcis DevTools.
+  // (Dissuasion uniquement — ne bloque pas un utilisateur déterminé.)
+  // ---------------------------------------------------------------------------
+  document.addEventListener('contextmenu', (e) => e.preventDefault());
+
+  document.addEventListener('keydown', (e) => {
+    const key = e.key ? e.key.toUpperCase() : '';
+    if (
+      key === 'F12' ||
+      (e.ctrlKey && e.shiftKey && (key === 'I' || key === 'J' || key === 'C')) ||
+      (e.ctrlKey && key === 'U') ||
+      (e.metaKey && e.altKey && (key === 'I' || key === 'J' || key === 'C'))
+    ) {
+      e.preventDefault();
+    }
+  });
+</script>
 </body>
 </html>
