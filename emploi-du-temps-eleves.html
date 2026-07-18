@@ -52,7 +52,6 @@
 
 <body class="antialiased min-h-screen flex flex-col">
 
-<!-- ================= HEADER ================= -->
 <header class="sticky top-0 z-30 bg-white/95 backdrop-blur border-b border-line no-print">
   <div class="max-w-6xl mx-auto px-5 sm:px-8 h-20 flex items-center justify-between gap-4">
     <a href="index.html#accueil" class="flex items-center gap-3">
@@ -82,13 +81,11 @@
     <p class="text-ink/60 text-sm mt-2 leading-relaxed">Sélectionnez votre classe pour consulter son emploi du temps hebdomadaire.</p>
   </div>
 
-  <!-- Chargement -->
   <div id="loadingState" class="flex flex-col items-center justify-center py-20 gap-3">
     <div class="w-8 h-8 border-[3px] border-navy/20 border-t-navy rounded-full animate-spin"></div>
     <p class="text-ink/40 text-sm font-semibold">Chargement…</p>
   </div>
 
-  <!-- Non publié -->
   <div id="notPublishedState" class="hidden bg-white border border-line rounded-3xl shadow-sm p-10 sm:p-14 text-center">
     <div class="w-16 h-16 rounded-full bg-mist grid place-items-center mx-auto mb-5">
       <svg width="26" height="26" viewBox="0 0 24 24" fill="none"><rect x="3" y="4" width="18" height="18" rx="2" stroke="#1B1464" stroke-width="1.6"/><path d="M8 2v4M16 2v4M3 10h18" stroke="#1B1464" stroke-width="1.6" stroke-linecap="round"/></svg>
@@ -97,7 +94,6 @@
     <p class="text-ink/50 text-sm max-w-md mx-auto">Nos équipes finalisent actuellement les emplois du temps. Revenez un peu plus tard.</p>
   </div>
 
-  <!-- Contenu publié -->
   <div id="publishedState" class="hidden flex flex-col gap-6">
     <div class="bg-white border border-line rounded-3xl shadow-sm p-5 sm:p-6 flex flex-wrap items-center gap-3 no-print">
       <label for="classeSelect" class="text-xs font-extrabold uppercase tracking-wide text-navy/70">Classe :</label>
@@ -128,7 +124,6 @@
 
 </main>
 
-<!-- ================= FOOTER ================= -->
 <footer class="bg-navy-900 text-white py-8 no-print">
   <div class="max-w-6xl mx-auto px-5 sm:px-8 flex flex-col sm:flex-row items-center justify-between gap-3 text-xs text-white/50">
     <p>© <span id="year"></span> DiwanE Al Maaref — Institution de Soutien Scolaire.</p>
@@ -139,9 +134,7 @@
 <script>document.getElementById('year').textContent = new Date().getFullYear();</script>
 
 <script type="module">
-// ---------------------------------------------------------------------------
-// MODE DÉMO — données fictives en mémoire, aucune base de données réelle.
-// ---------------------------------------------------------------------------
+
 
 const JOURS_ALL = ['Lundi','Mardi','Mercredi','Jeudi','Vendredi','Samedi'];
 const JOURS_DEFAULT = ['Lundi','Mardi','Mercredi','Jeudi','Vendredi'];
