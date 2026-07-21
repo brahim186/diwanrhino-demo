@@ -1,0 +1,803 @@
+<!DOCTYPE html>
+<html lang="fr" dir="ltr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Élèves Admis | RIHANIO</title>
+<meta name="robots" content="noindex, nofollow">
+<link rel="icon" type="image/png" href="logo.png">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800&family=Fraunces:wght@500;600&family=Manrope:wght@500;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+<script src="https://cdn.tailwindcss.com"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.8.2/jspdf.plugin.autotable.min.js"></script>
+
+<script>
+  tailwind.config = {
+    theme: {
+      extend: {
+        colors: {
+          navy:  { DEFAULT:'#1B1464', 700:'#170F52', 900:'#100B3B' },
+          purple:{ DEFAULT:'#5B3AA6' },
+          gold:  { DEFAULT:'#F0A93C', light:'#FBC873', dark:'#D98F1F' },
+          ink:   '#221D3D',
+          mist:  '#F6F4FC',
+          line:  '#E7E2F3',
+        },
+        fontFamily: { sans: ['Inter','sans-serif'], display: ['Fraunces','serif'] }
+      }
+    }
+  }
+</script>
+
+<style>
+  body { font-family:'Inter', sans-serif; color:#221D3D; background:#F6F4FC; }
+  .font-display { font-family:'Fraunces', serif; }
+  .num { font-family:'Manrope', sans-serif; }
+  ::selection { background:#F0A93C; color:#1B1464; }
+
+  a:focus-visible, button:focus-visible, input:focus-visible, select:focus-visible {
+    outline: 2px solid #F0A93C; outline-offset: 2px; border-radius: 6px;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    * { animation-duration:.01ms !important; transition-duration:.01ms !important; }
+  }
+
+  .spinner {
+    width: 20px; height: 20px; border-radius: 50%;
+    border: 3px solid rgba(27,20,100,.15); border-top-color:#1B1464;
+    animation: spin .7s linear infinite;
+  }
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  .row-card { transition: background .2s ease; }
+  .row-card:hover { background: #FBF9FE; }
+
+  .group-select {
+    appearance: none;
+    -webkit-appearance: none;
+    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 24 24' fill='none'><path d='M6 9l6 6 6-6' stroke='%235B3AA6' stroke-width='2.2' stroke-linecap='round' stroke-linejoin='round'/></svg>");
+    background-repeat: no-repeat;
+    background-position: left .7rem center;
+  }
+
+  .saved-flash { animation: flash 1s ease; }
+  @keyframes flash {
+    0%   { background-color:#D1FAE5; }
+    100% { background-color:transparent; }
+  }
+
+  /* ---------- Barre latérale rétractable ---------- */
+  .side-nav {
+    position: fixed; top: 0; left: 0; height: 100vh; width: 72px;
+    background: #ffffff; border-right: 1px solid #E7E2F3; z-index: 50;
+    display: flex; flex-direction: column;
+    overflow: hidden;
+    transition: width .25s cubic-bezier(.2,.8,.25,1), box-shadow .25s ease;
+  }
+  .side-nav:hover {
+    width: 264px;
+    box-shadow: 16px 0 34px -20px rgba(27,20,100,.35);
+  }
+  .side-nav-logo {
+    height: 80px; flex-shrink: 0; display: flex; align-items: center; gap: 12px;
+    padding: 0 17px; border-bottom: 1px solid #E7E2F3;
+  }
+  .side-nav-logo img { width: 34px; height: 34px; object-fit: contain; flex-shrink: 0; }
+  .side-nav-logo span {
+    font-family: 'Fraunces', serif; font-weight: 600; color: #1B1464; font-size: 13px;
+    white-space: nowrap; opacity: 0; transform: translateX(-6px);
+    transition: opacity .2s ease .05s, transform .2s ease .05s;
+  }
+  .side-nav:hover .side-nav-logo span { opacity: 1; transform: translateX(0); }
+  .side-nav-scroll { flex: 1; overflow-y: auto; overflow-x: hidden; padding: 10px 10px 16px; }
+  .side-nav-scroll::-webkit-scrollbar { width: 4px; }
+  .side-nav-scroll::-webkit-scrollbar-thumb { background: #E7E2F3; border-radius: 4px; }
+  .side-cat-label {
+    font-size: 10px; font-weight: 800; text-transform: uppercase; letter-spacing: .06em;
+    color: #9C93BE; padding: 14px 10px 6px; white-space: nowrap;
+    opacity: 0; transition: opacity .2s ease .05s;
+  }
+  .side-nav:hover .side-cat-label { opacity: 1; }
+  .side-item {
+    display: flex; align-items: center; gap: 14px; padding: 10px 11px; border-radius: 14px;
+    margin-bottom: 2px; color: #221D3D; text-decoration: none; white-space: nowrap;
+    transition: background .2s ease;
+  }
+  .side-item:hover { background: #F6F4FC; }
+  .side-item.active { background: #1B1464; }
+  .side-item.active .side-item-label { color: #ffffff; }
+  .side-item.active .side-item-icon svg path,
+  .side-item.active .side-item-icon svg rect,
+  .side-item.active .side-item-icon svg circle { stroke: #ffffff !important; }
+  .side-item-icon {
+    width: 24px; height: 24px; flex-shrink: 0; display: grid; place-items: center;
+  }
+  .side-item-label {
+    font-size: 13px; font-weight: 700; color: #221D3D;
+    opacity: 0; transform: translateX(-6px);
+    transition: opacity .2s ease .05s, transform .2s ease .05s, color .2s ease;
+  }
+  .side-nav:hover .side-item-label { opacity: 1; transform: translateX(0); }
+
+  body.has-sidenav { padding-left: 72px; }
+  @media (max-width: 767px) {
+    .side-nav { display: none; }
+    body.has-sidenav { padding-left: 0; }
+  }
+</style>
+</head>
+
+<body class="antialiased min-h-screen has-sidenav">
+
+<!-- ===== Barre latérale (icônes -> se déplie au survol) ===== -->
+<nav class="side-nav" id="sideNav" aria-label="Menu Administration">
+  <a href="espace-administration.html" class="side-nav-logo">
+    <img src="logo.png" alt="Logo RIHANIO">
+    <span>RIHANIO</span>
+  </a>
+  <div class="side-nav-scroll" id="sideNavScroll"></div>
+</nav>
+
+
+<!-- Écran affiché si aucune session admin active -->
+<div id="noSessionGate" class="hidden min-h-screen flex items-center justify-center px-5">
+  <div class="w-full max-w-sm bg-white border border-line rounded-3xl shadow-xl p-8 sm:p-10 text-center">
+    <img src="logo.png" alt="Logo RIHANIO" class="h-16 w-16 object-contain mb-5 mx-auto">
+    <h1 class="font-display font-semibold text-navy text-lg mb-2">Session requise</h1>
+    <p class="text-ink/50 text-sm mb-6">Veuillez vous connecter depuis le tableau de bord administratif principal pour accéder à cette page.</p>
+    <a href="admin-dashboard.html" class="inline-flex items-center justify-center gap-2 bg-navy hover:bg-navy-700 text-white font-extrabold px-6 py-3 rounded-full transition-colors text-sm">
+      Aller au Tableau de Bord
+    </a>
+  </div>
+</div>
+
+<div id="dashboard" class="hidden">
+
+  <header class="sticky top-0 z-30 bg-white/95 backdrop-blur border-b border-line">
+    <div class="max-w-6xl mx-auto px-5 sm:px-8 h-20 flex items-center justify-between gap-4">
+      <div class="flex items-center gap-3">
+        <img src="logo.png" alt="Logo RIHANIO" class="h-11 w-11 object-contain">
+        <div class="hidden sm:flex flex-col leading-tight">
+          <span class="font-display font-semibold text-navy text-base">Élèves Admis</span>
+          <span class="text-[11px] text-gold-dark font-bold">RIHANIO — Administration</span>
+        </div>
+      </div>
+      <div class="flex items-center gap-3">
+        <a href="espace-administration.html" class="inline-flex items-center gap-2 text-xs font-bold text-navy/70 hover:text-gold-dark border border-line rounded-full px-4 py-2.5 transition-colors bg-white">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M19 12H5M12 19l-7-7 7-7" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          <span class="hidden sm:inline">Retour au tableau de bord</span>
+        </a>
+        <button id="refreshBtn" class="w-10 h-10 grid place-items-center rounded-full border border-line text-navy hover:border-gold hover:text-gold-dark transition-colors" aria-label="Actualiser les données">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M21 12a9 9 0 11-3-6.7" stroke="currentColor" stroke-width="2"/><path d="M21 3v6h-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <button id="logoutBtn" class="text-sm font-bold text-navy/60 hover:text-red-500 transition-colors">Déconnexion</button>
+      </div>
+    </div>
+  </header>
+
+  <main class="max-w-6xl mx-auto px-5 sm:px-8 py-10">
+
+    <div class="mb-6 text-xs font-bold text-gold-dark bg-gold/10 border border-gold/30 rounded-xl px-4 py-2.5 inline-block">
+      🧪 Mode démo — données factices en mémoire (aucune connexion à une base réelle). Les exports Excel/PDF et l'import fonctionnent normalement.
+    </div>
+
+    <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-5 mb-6">
+      <div>
+        <h2 class="font-display font-semibold text-navy text-2xl">Liste des Élèves Admis</h2>
+        <p class="text-ink/50 text-sm mt-1"><span id="totalCount" class="font-bold text-navy num">0</span> élève(s) admis — <span id="assignedCount" class="font-bold text-purple num">0</span> affecté(s) à un groupe</p>
+      </div>
+      <div class="relative w-full sm:w-72">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" class="absolute left-4 top-1/2 -translate-y-1/2 text-ink/30"><circle cx="11" cy="11" r="7" stroke="currentColor" stroke-width="2"/><path d="M21 21l-4-4" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+        <input id="searchInput" type="text" placeholder="Rechercher par nom ou matricule..." class="w-full rounded-full border border-line bg-white pl-11 pr-4 py-2.5 text-sm focus:border-gold outline-none">
+      </div>
+    </div>
+
+    <div class="flex flex-wrap items-center justify-between gap-3 mb-8">
+      <div class="flex flex-wrap items-center gap-3">
+        <select id="levelFilter" class="rounded-full border border-line bg-white px-4 py-2 text-xs font-bold text-navy focus:border-gold outline-none">
+          <option value="">Tous les niveaux</option>
+        </select>
+        <select id="groupFilter" class="rounded-full border border-line bg-white px-4 py-2 text-xs font-bold text-navy focus:border-gold outline-none">
+          <option value="">Tous les groupes</option>
+          <option value="__none__">Non affecté</option>
+        </select>
+      </div>
+      <div class="flex flex-wrap items-center gap-2">
+        <input type="file" id="importFileInput" accept=".xlsx,.xls,.csv" class="hidden">
+        <button type="button" id="importBtn" class="inline-flex items-center gap-1.5 text-xs font-extrabold text-purple bg-purple/10 hover:bg-purple hover:text-white border border-purple/20 rounded-full px-4 py-2.5 transition-colors">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M12 3v12m0-12l4 4m-4-4L8 7M4 17v2a2 2 0 002 2h12a2 2 0 002-2v-2" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" transform="rotate(180 12 12)"/></svg>
+          Importer
+        </button>
+        <button type="button" id="exportExcelBtn" class="inline-flex items-center gap-1.5 text-xs font-extrabold text-emerald-700 bg-emerald-50 hover:bg-emerald-600 hover:text-white border border-emerald-200 rounded-full px-4 py-2.5 transition-colors">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M4 19V6a2 2 0 012-2h9l5 5v10a2 2 0 01-2 2H6a2 2 0 01-2-2z" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/><path d="M8 12h8M8 16h5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+          Excel
+        </button>
+        <button type="button" id="exportPdfBtn" class="inline-flex items-center gap-1.5 text-xs font-extrabold text-rose-700 bg-rose-50 hover:bg-rose-600 hover:text-white border border-rose-200 rounded-full px-4 py-2.5 transition-colors">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M4 19V6a2 2 0 012-2h9l5 5v10a2 2 0 01-2 2H6a2 2 0 01-2-2z" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/><path d="M8 12h8M8 16h5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+          PDF
+        </button>
+      </div>
+    </div>
+    <p id="importSummary" class="hidden mb-6 text-xs font-bold text-navy bg-white border border-line rounded-xl px-4 py-3"></p>
+
+    <div class="bg-white border border-line rounded-3xl shadow-sm p-5 sm:p-6 mb-8">
+      <div class="flex flex-wrap items-end gap-4">
+        <div>
+          <p class="font-display font-semibold text-navy text-base mb-1">Répartition automatique des groupes</p>
+          <p class="text-ink/50 text-xs max-w-md">
+            Répartit les élèves admis par <span class="font-bold text-navy">niveau</span>, dans l'ordre du matricule,
+            avec un ratio garçons/filles d'environ 30–45% / 55–70% par groupe (Groupe A, B, C…).
+          </p>
+        </div>
+        <div class="flex flex-col gap-1">
+          <label for="groupSizeInput" class="text-[11px] font-extrabold uppercase tracking-wide text-ink/40">Taille max. / groupe</label>
+          <input id="groupSizeInput" type="number" min="2" value="30" class="w-32 rounded-full border border-line bg-white px-4 py-2 text-sm focus:border-gold outline-none num">
+        </div>
+        <button id="distributeGroupsBtn" type="button" class="inline-flex items-center gap-2 bg-purple hover:bg-purple/90 text-white font-extrabold text-xs px-5 py-3 rounded-full transition-colors shadow-sm">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M16 21v-2a4 4 0 00-4-4H6a4 4 0 00-4 4v2" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><circle cx="9" cy="7" r="4" stroke="currentColor" stroke-width="2"/><path d="M22 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          Répartir automatiquement
+        </button>
+      </div>
+      <div id="groupDistributionSummary" class="hidden mt-4 pt-4 border-t border-line text-xs text-ink/70 space-y-1"></div>
+    </div>
+
+    <div id="loadingState" class="flex flex-col items-center justify-center py-24 gap-4">
+      <span class="spinner" style="width:32px;height:32px;border-width:4px;"></span>
+      <p class="text-ink/50 text-sm">Chargement des données en cours...</p>
+    </div>
+
+    <div id="emptyState" class="hidden flex-col items-center justify-center py-24 gap-3 text-center">
+      <svg width="48" height="48" viewBox="0 0 24 24" fill="none"><path d="M9 12h6M9 16h6M9 8h6" stroke="#5B3AA6" stroke-width="1.6" stroke-linecap="round"/><path d="M4 19V6a2 2 0 012-2h9l5 5v10a2 2 0 01-2 2H6a2 2 0 01-2-2z" stroke="#5B3AA6" stroke-width="1.6" stroke-linejoin="round"/></svg>
+      <p class="text-navy font-bold">Aucun élève admis pour le moment</p>
+      <p class="text-ink/45 text-sm">Les élèves dont le dossier est accepté apparaîtront automatiquement ici.</p>
+    </div>
+
+    <div id="tableWrap" class="hidden bg-white border border-line rounded-3xl overflow-hidden shadow-sm">
+      <div class="grid grid-cols-[90px_1fr_1fr_100px_100px_150px_150px] gap-2 px-5 sm:px-7 py-4 bg-navy text-white text-[11px] sm:text-xs font-extrabold uppercase tracking-wide">
+        <span>Matricule</span>
+        <span>Prénom</span>
+        <span>Nom</span>
+        <span>Naissance</span>
+        <span>Niveau</span>
+        <span>Arrêt</span>
+        <span>Groupe</span>
+      </div>
+      <div id="rowsContainer" class="divide-y divide-line"></div>
+    </div>
+
+  </main>
+</div>
+
+<template id="rowTemplate">
+  <div class="row-card grid grid-cols-[90px_1fr_1fr_100px_100px_150px_150px] gap-2 items-center px-5 sm:px-7 py-4">
+    <span class="num font-bold text-navy text-sm" data-field="id"></span>
+    <span class="font-semibold text-ink text-sm truncate" data-field="firstName"></span>
+    <span class="font-semibold text-ink text-sm truncate" data-field="lastName"></span>
+    <span class="text-ink/60 text-xs sm:text-sm num" data-field="dob"></span>
+    <span class="text-xs sm:text-sm font-bold text-purple" data-field="level"></span>
+    <span class="text-xs sm:text-sm text-ink/70 truncate" data-field="arret"></span>
+    <select data-field="groupSelect" class="group-select w-full rounded-full border border-line bg-mist/60 pl-7 pr-3 py-2 text-xs font-bold text-navy focus:border-gold outline-none cursor-pointer"></select>
+  </div>
+</template>
+
+<script type="module">
+// ===== MOCK BACKEND (démo autonome, sans Supabase) =====================
+const MOCK_STUDENTS = [
+  { id: 'MAT-1001', prenom: 'Yasmine', nom: 'El Amrani', dateNaissance: '12/03/2011', niveau: '6ème', arretNom: 'Arrêt Centre-Ville', genre: 'fille', statut: 'Accepté', groupe: 'Non assigné' },
+  { id: 'MAT-1002', prenom: 'Adam', nom: 'Bennani', dateNaissance: '05/07/2011', niveau: '6ème', arretNom: 'Arrêt Hay Salam', genre: 'garçon', statut: 'Accepté', groupe: 'Non assigné' },
+  { id: 'MAT-1003', prenom: 'Salma', nom: 'Tazi', dateNaissance: '21/01/2011', niveau: '6ème', arretNom: 'Arrêt Centre-Ville', genre: 'fille', statut: 'Accepté', groupe: 'Groupe A' },
+  { id: 'MAT-1004', prenom: 'Yassine', nom: 'Chraibi', dateNaissance: '30/09/2011', niveau: '6ème', arretNom: 'Arrêt Riad', genre: 'garçon', statut: 'Accepté', groupe: 'Non assigné' },
+  { id: 'MAT-1005', prenom: 'Nour', nom: 'Idrissi', dateNaissance: '14/02/2011', niveau: '6ème', arretNom: 'Arrêt Hay Salam', genre: 'fille', statut: 'Accepté', groupe: 'Non assigné' },
+  { id: 'MAT-1006', prenom: 'Omar', nom: 'Fassi', dateNaissance: '18/11/2010', niveau: '5ème', arretNom: 'Arrêt Riad', genre: 'garçon', statut: 'Accepté', groupe: 'Non assigné' },
+  { id: 'MAT-1007', prenom: 'Lina', nom: 'Berrada', dateNaissance: '02/06/2010', niveau: '5ème', arretNom: 'Arrêt Centre-Ville', genre: 'fille', statut: 'Accepté', groupe: 'Non assigné' },
+  { id: 'MAT-1008', prenom: 'Ayoub', nom: 'Squalli', dateNaissance: '09/04/2010', niveau: '5ème', arretNom: 'Arrêt Hay Salam', genre: 'garçon', statut: 'Accepté', groupe: 'Groupe B' },
+  { id: 'MAT-1009', prenom: 'Ines', nom: 'Kabbaj', dateNaissance: '27/08/2010', niveau: '5ème', arretNom: 'Arrêt Riad', genre: 'fille', statut: 'Accepté', groupe: 'Non assigné' },
+  { id: 'MAT-1010', prenom: 'Mehdi', nom: 'Alaoui', dateNaissance: '16/12/2009', niveau: '4ème', arretNom: 'Arrêt Centre-Ville', genre: 'garçon', statut: 'Accepté', groupe: 'Non assigné' },
+  { id: 'MAT-1011', prenom: 'Rim', nom: 'Sbai', dateNaissance: '03/05/2009', niveau: '4ème', arretNom: 'Arrêt Hay Salam', genre: 'fille', statut: 'Accepté', groupe: 'Non assigné' },
+  { id: 'MAT-1012', prenom: 'Karim', nom: 'Lahlou', dateNaissance: '22/10/2009', niveau: '4ème', arretNom: 'Arrêt Riad', genre: 'garçon', statut: 'Accepté', groupe: 'Non assigné' },
+  { id: 'MAT-1013', prenom: 'Hiba', nom: 'Ouazzani', dateNaissance: '11/07/2009', niveau: '4ème', arretNom: 'Arrêt Centre-Ville', genre: 'fille', statut: 'Accepté', groupe: 'Non assigné' },
+  { id: 'MAT-1014', prenom: 'Anas', nom: 'Ziani', dateNaissance: '08/01/2012', niveau: '6ème', arretNom: 'Arrêt Riad', genre: 'garçon', statut: 'En attente', groupe: 'Non assigné' },
+];
+
+function mockDelay(v, ms = 250) { return new Promise((res) => setTimeout(() => res(v), ms)); }
+
+const auth = {};
+async function signOut() { return mockDelay(true, 150); }
+function requireAdmin(cb) { cb(); } // démo : session toujours considérée valide
+
+const db = { __store: MOCK_STUDENTS.map((s) => ({ ...s })) };
+function collection(_db, name) { return { name }; }
+async function getDocs(col) {
+  await mockDelay(null, 500);
+  return { docs: db.__store.map((s) => ({ id: s.id, data: () => ({ ...s }) })) };
+}
+function doc(_db, _collection, id) { return { id }; }
+async function updateDoc(ref, patch) {
+  await mockDelay(null, 200);
+  const rec = db.__store.find((s) => s.id === ref.id);
+  if (rec) Object.assign(rec, patch);
+}
+// ===== FIN MOCK BACKEND ==================================================
+
+// Liste des groupes disponibles — à ajuster selon les besoins de l'établissement.
+const AVAILABLE_GROUPS = ['Groupe A', 'Groupe B', 'Groupe C', 'Groupe D', 'Groupe E', 'Groupe F'];
+
+let allRecords = [];   // tous les élèves admis (statut === 'Accepté'), avec { id, ...data }
+
+const dashboard = document.getElementById('dashboard');
+const noSessionGate = document.getElementById('noSessionGate');
+
+document.getElementById('logoutBtn').addEventListener('click', async () => {
+  await signOut(auth);
+  location.href = 'connexion.html';
+});
+
+document.getElementById('refreshBtn').addEventListener('click', () => fetchRecords());
+
+// --- Export Excel / PDF (données filtrées actuellement affichées) ------------------
+function exportFileName(ext) {
+  return `eleves_admis_${new Date().toISOString().slice(0, 10)}.${ext}`;
+}
+
+function studentGroupLabel(r) {
+  return (r.groupe && r.groupe !== 'Non assigné') ? r.groupe : '';
+}
+
+document.getElementById('exportExcelBtn').addEventListener('click', () => {
+  const rows = getFilteredRecords().map((r) => ({
+    'Matricule': r.id || '',
+    'Prénom': r.prenom || '',
+    'Nom': r.nom || '',
+    'Naissance': r.dateNaissance || '',
+    'Niveau': r.niveau || '',
+    'Arrêt': r.arretNom || '',
+    'Groupe': studentGroupLabel(r),
+  }));
+  if (rows.length === 0) { alert('Aucune donnée à exporter avec ces filtres.'); return; }
+  const ws = XLSX.utils.json_to_sheet(rows);
+  ws['!cols'] = [{ wch: 12 }, { wch: 20 }, { wch: 20 }, { wch: 14 }, { wch: 14 }, { wch: 18 }, { wch: 14 }];
+  const wb = XLSX.utils.book_new();
+  XLSX.utils.book_append_sheet(wb, ws, 'Élèves admis');
+  XLSX.writeFile(wb, exportFileName('xlsx'));
+});
+
+document.getElementById('exportPdfBtn').addEventListener('click', () => {
+  const rows = getFilteredRecords();
+  if (rows.length === 0) { alert('Aucune donnée à exporter avec ces filtres.'); return; }
+
+  const { jsPDF } = window.jspdf;
+  const pdf = new jsPDF({ orientation: 'landscape', unit: 'mm', format: 'a4' });
+  pdf.setFontSize(14);
+  pdf.setTextColor(27, 20, 100);
+  pdf.text('RIHANIO — Élèves Admis', 14, 15);
+  pdf.setFontSize(9);
+  pdf.setTextColor(120, 120, 120);
+  pdf.text(`Généré le ${new Date().toLocaleDateString('fr-FR')}`, 14, 21);
+
+  pdf.autoTable({
+    head: [['Matricule', 'Prénom', 'Nom', 'Naissance', 'Niveau', 'Arrêt', 'Groupe']],
+    body: rows.map((r) => [r.id || '', r.prenom || '', r.nom || '', r.dateNaissance || '', r.niveau || '', r.arretNom || '—', studentGroupLabel(r) || '—']),
+    startY: 26,
+    styles: { fontSize: 8, cellPadding: 2 },
+    headStyles: { fillColor: [27, 20, 100], textColor: 255, fontStyle: 'bold' },
+    alternateRowStyles: { fillColor: [246, 244, 252] },
+  });
+
+  pdf.save(exportFileName('pdf'));
+});
+
+// --- Import Excel / CSV ----------------------------------------------------------
+// Colonnes attendues (en-têtes, insensibles à la casse) : Matricule, Groupe.
+// Sert à affecter en masse les groupes des élèves déjà admis (identifiés par leur
+// matricule). Toute ligne dont le matricule ne correspond à aucun élève admis, ou
+// dont le groupe n'existe pas dans la liste des groupes disponibles, est ignorée.
+const importBtn = document.getElementById('importBtn');
+const importFileInput = document.getElementById('importFileInput');
+const importSummary = document.getElementById('importSummary');
+
+importBtn.addEventListener('click', () => importFileInput.click());
+
+function normalizeHeader(h) {
+  return (h || '').toString().trim().toLowerCase();
+}
+
+importFileInput.addEventListener('change', async (e) => {
+  const file = e.target.files[0];
+  if (!file) return;
+  importSummary.classList.add('hidden');
+
+  try {
+    const buffer = await file.arrayBuffer();
+    const wb = XLSX.read(buffer, { type: 'array', cellDates: false });
+    const sheet = wb.Sheets[wb.SheetNames[0]];
+    const rawRows = XLSX.utils.sheet_to_json(sheet, { defval: '' });
+
+    let success = 0, skipped = 0;
+    for (const raw of rawRows) {
+      const map = {};
+      Object.keys(raw).forEach((k) => { map[normalizeHeader(k)] = raw[k]; });
+
+      const matricule = String(map['matricule'] || map['id'] || '').trim();
+      const groupeRaw = String(map['groupe'] || '').trim();
+
+      const record = allRecords.find((r) => (r.id || '').trim() === matricule);
+      const groupeValide = groupeRaw && AVAILABLE_GROUPS.includes(groupeRaw) ? groupeRaw : (groupeRaw === '' ? 'Non assigné' : null);
+
+      if (!matricule || !record || groupeValide === null) {
+        skipped += 1;
+        continue;
+      }
+
+      try {
+        await updateDoc(doc(db, 'students', record.id), { groupe: groupeValide });
+        record.groupe = groupeValide;
+        success += 1;
+      } catch (err) {
+        skipped += 1;
+      }
+    }
+
+    importSummary.textContent = `${success} affectation(s) mise(s) à jour avec succès` + (skipped > 0 ? `, ${skipped} ligne(s) ignorée(s) (matricule inconnu ou groupe invalide).` : '.');
+    importSummary.classList.remove('hidden');
+    applyFilters();
+  } catch (err) {
+    importSummary.textContent = "Erreur lors de la lecture du fichier. Vérifiez qu'il s'agit bien d'un fichier Excel (.xlsx) ou CSV valide.";
+    importSummary.classList.remove('hidden');
+  } finally {
+    importFileInput.value = '';
+  }
+});
+
+requireAdmin(() => fetchRecords());
+
+async function fetchRecords() {
+  const loadingState = document.getElementById('loadingState');
+  const tableWrap = document.getElementById('tableWrap');
+  const emptyState = document.getElementById('emptyState');
+
+  noSessionGate.classList.add('hidden');
+  dashboard.classList.remove('hidden');
+  loadingState.classList.remove('hidden');
+  tableWrap.classList.add('hidden');
+  emptyState.classList.add('hidden');
+
+  try {
+    const snap = await getDocs(collection(db, 'students'));
+    const records = snap.docs.map((d) => ({ id: d.id, ...d.data() }));
+    allRecords = records.filter((r) => r.statut === 'Accepté');
+    populateLevelFilter(allRecords);
+    populateGroupFilter();
+    applyFilters();
+  } catch (err) {
+    loadingState.classList.add('hidden');
+    emptyState.classList.remove('hidden');
+    emptyState.querySelector('p.font-bold').textContent = "Erreur réseau lors du chargement.";
+  } finally {
+    loadingState.classList.add('hidden');
+  }
+}
+
+function populateLevelFilter(records) {
+  const select = document.getElementById('levelFilter');
+  const current = select.value;
+  const levels = [...new Set(records.map(r => r.niveau).filter(Boolean))].sort();
+  select.innerHTML = '<option value="">Tous les niveaux</option>' +
+    levels.map(l => `<option value="${l}">${l}</option>`).join('');
+  select.value = current || '';
+}
+
+function populateGroupFilter() {
+  const select = document.getElementById('groupFilter');
+  const current = select.value;
+  select.innerHTML =
+    '<option value="">Tous les groupes</option>' +
+    '<option value="__none__">Non affecté</option>' +
+    AVAILABLE_GROUPS.map(g => `<option value="${g}">${g}</option>`).join('');
+  select.value = current || '';
+}
+
+// --- Répartition automatique en groupes -------------------------------------------
+// Règle : par niveau, dans l'ordre du matricule, on remplit des groupes (Groupe A, B, C…)
+// de taille max = groupSizeInput, en visant ~30–45% de garçons et ~55–70% de filles par
+// groupe. S'il reste des élèves une fois un groupe complet, ils passent au groupe suivant.
+
+function ensureGroupNamesUpTo(count) {
+  // Étend AVAILABLE_GROUPS (Groupe A, B, C, ...) si plus de groupes sont nécessaires.
+  while (AVAILABLE_GROUPS.length < count) {
+    const letter = String.fromCharCode(65 + AVAILABLE_GROUPS.length);
+    AVAILABLE_GROUPS.push(`Groupe ${letter}`);
+  }
+}
+
+function matriculeCompare(a, b) {
+  const na = parseFloat(String(a.id).replace(/[^\d.]/g, ''));
+  const nb = parseFloat(String(b.id).replace(/[^\d.]/g, ''));
+  if (!isNaN(na) && !isNaN(nb) && na !== nb) return na - nb;
+  return String(a.id || '').localeCompare(String(b.id || ''));
+}
+
+function genderOf(r) {
+  const v = (r.genre || '').toString().trim().toLowerCase();
+  const feminine = ['f', 'fille', 'féminin', 'feminin', 'بنت', 'أنثى', 'انثى', 'girl', 'female'];
+  const masculine = ['m', 'garçon', 'garcon', 'masculin', 'ولد', 'ذكر', 'boy', 'male'];
+  if (feminine.some(k => v === k || v.includes(k))) return 'fille';
+  if (masculine.some(k => v === k || v.includes(k))) return 'garçon';
+  return 'inconnu';
+}
+
+// Répartit deux files (garçons/filles), déjà triées par matricule, en groupes de taille
+// maxSize en visant ~37.5% garçons / ~62.5% filles (milieu de la fourchette 30–45% / 70–55%).
+function splitIntoGroups(boys, girls, unknown, maxSize) {
+  const groups = [];
+  let bi = 0, gi = 0, ui = 0;
+  const idealBoys = Math.max(1, Math.round(maxSize * 0.375));
+
+  while (bi < boys.length || gi < girls.length || ui < unknown.length) {
+    let takeB = Math.min(idealBoys, boys.length - bi);
+    let takeG = Math.min(maxSize - takeB, girls.length - gi);
+    let total = takeB + takeG;
+
+    // Complète le groupe avec ce qu'il reste si une des files est épuisée.
+    if (total < maxSize && boys.length - bi - takeB > 0) {
+      const extra = Math.min(maxSize - total, boys.length - bi - takeB);
+      takeB += extra; total += extra;
+    }
+    if (total < maxSize && girls.length - gi - takeG > 0) {
+      const extra = Math.min(maxSize - total, girls.length - gi - takeG);
+      takeG += extra; total += extra;
+    }
+    let takeU = 0;
+    if (total < maxSize && unknown.length - ui > 0) {
+      takeU = Math.min(maxSize - total, unknown.length - ui);
+      total += takeU;
+    }
+
+    if (takeB === 0 && takeG === 0 && takeU === 0) break; // sécurité anti-boucle infinie
+
+    const groupStudents = [
+      ...boys.slice(bi, bi + takeB),
+      ...girls.slice(gi, gi + takeG),
+      ...unknown.slice(ui, ui + takeU),
+    ];
+    bi += takeB; gi += takeG; ui += takeU;
+    groups.push({ students: groupStudents, boys: takeB, girls: takeG, unknown: takeU });
+  }
+  return groups;
+}
+
+async function distributeGroupsAutomatically() {
+  const btn = document.getElementById('distributeGroupsBtn');
+  const summaryEl = document.getElementById('groupDistributionSummary');
+  const maxSize = parseInt(document.getElementById('groupSizeInput').value, 10);
+
+  if (!maxSize || maxSize < 2) {
+    alert('Merci de saisir une taille de groupe valide (2 ou plus).');
+    return;
+  }
+  if (!confirm(`Cette action va (ré)affecter le groupe de tous les élèves admis, par niveau, avec un maximum de ${maxSize} élèves par groupe. Continuer ?`)) {
+    return;
+  }
+
+  btn.disabled = true;
+  btn.textContent = 'Répartition en cours...';
+  summaryEl.classList.add('hidden');
+  summaryEl.innerHTML = '';
+
+  try {
+    const levels = [...new Set(allRecords.map(r => r.niveau).filter(Boolean))].sort();
+    const summaryLines = [];
+    let maxGroupsInAnyLevel = 0;
+
+    const plan = []; // { niveau, groups: [...] }
+    for (const niveau of levels) {
+      const studentsOfLevel = allRecords.filter(r => r.niveau === niveau).sort(matriculeCompare);
+      const boys = studentsOfLevel.filter(r => genderOf(r) === 'garçon');
+      const girls = studentsOfLevel.filter(r => genderOf(r) === 'fille');
+      const unknown = studentsOfLevel.filter(r => genderOf(r) === 'inconnu');
+
+      const groups = splitIntoGroups(boys, girls, unknown, maxSize);
+      maxGroupsInAnyLevel = Math.max(maxGroupsInAnyLevel, groups.length);
+      plan.push({ niveau, groups });
+    }
+
+    ensureGroupNamesUpTo(maxGroupsInAnyLevel);
+
+    let success = 0, failed = 0;
+    for (const { niveau, groups } of plan) {
+      groups.forEach((g, idx) => {
+        const groupName = AVAILABLE_GROUPS[idx];
+        summaryLines.push(
+          `${niveau} — ${groupName} : ${g.students.length} élève(s) (${g.boys} garçon(s), ${g.girls} fille(s)${g.unknown ? `, ${g.unknown} genre non précisé` : ''})`
+        );
+        g.groupName = groupName;
+      });
+    }
+
+    for (const { groups } of plan) {
+      for (const g of groups) {
+        for (const student of g.students) {
+          try {
+            await updateDoc(doc(db, 'students', student.id), { groupe: g.groupName });
+            student.groupe = g.groupName;
+            success += 1;
+          } catch (e) {
+            failed += 1;
+          }
+        }
+      }
+    }
+
+    populateGroupFilter();
+    applyFilters();
+
+    summaryEl.innerHTML =
+      `<p class="font-bold text-navy mb-2">${success} élève(s) affecté(s)${failed ? `, ${failed} échec(s)` : ''} :</p>` +
+      summaryLines.map(l => `<p>${l}</p>`).join('');
+    summaryEl.classList.remove('hidden');
+  } finally {
+    btn.disabled = false;
+    btn.innerHTML = `<svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M16 21v-2a4 4 0 00-4-4H6a4 4 0 00-4 4v2" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><circle cx="9" cy="7" r="4" stroke="currentColor" stroke-width="2"/><path d="M22 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg> Répartir automatiquement`;
+  }
+}
+
+document.getElementById('distributeGroupsBtn').addEventListener('click', distributeGroupsAutomatically);
+
+function getFilteredRecords() {
+  const q = document.getElementById('searchInput').value.trim().toLowerCase();
+  const level = document.getElementById('levelFilter').value;
+  const group = document.getElementById('groupFilter').value;
+
+  return allRecords.filter(r => {
+    const matchesQuery = !q ||
+      (r.prenom || '').toLowerCase().includes(q) ||
+      (r.nom || '').toLowerCase().includes(q) ||
+      (r.id || '').toLowerCase().includes(q);
+    const matchesLevel = !level || r.niveau === level;
+    const studentGroup = (r.groupe && r.groupe !== 'Non assigné') ? r.groupe : '';
+    const matchesGroup = !group ||
+      (group === '__none__' ? !studentGroup : studentGroup === group);
+    return matchesQuery && matchesLevel && matchesGroup;
+  });
+}
+
+function applyFilters() {
+  renderRecords(getFilteredRecords());
+}
+
+document.getElementById('searchInput').addEventListener('input', applyFilters);
+document.getElementById('levelFilter').addEventListener('change', applyFilters);
+document.getElementById('groupFilter').addEventListener('change', applyFilters);
+
+function renderRecords(records) {
+  const container = document.getElementById('rowsContainer');
+  const tableWrap = document.getElementById('tableWrap');
+  const emptyState = document.getElementById('emptyState');
+  const totalCount = document.getElementById('totalCount');
+  const assignedCount = document.getElementById('assignedCount');
+
+  container.innerHTML = '';
+  totalCount.textContent = allRecords.length;
+  assignedCount.textContent = allRecords.filter(r => r.groupe && r.groupe !== 'Non assigné').length;
+
+  if (records.length === 0) {
+    tableWrap.classList.add('hidden');
+    emptyState.classList.remove('hidden');
+    emptyState.querySelector('p.font-bold').textContent = "Aucun élève ne correspond à cette recherche";
+    emptyState.querySelector('p.text-ink\\/45').textContent = "Essayez de modifier vos filtres ou votre recherche.";
+    return;
+  }
+  emptyState.classList.add('hidden');
+  tableWrap.classList.remove('hidden');
+
+  const template = document.getElementById('rowTemplate');
+
+  records.forEach((r) => {
+    const node = template.content.cloneNode(true);
+    const rowRoot = node.querySelector('.row-card');
+
+    node.querySelector('[data-field="id"]').textContent = r.id ?? '—';
+    node.querySelector('[data-field="firstName"]').textContent = r.prenom || '—';
+    node.querySelector('[data-field="lastName"]').textContent = r.nom || '—';
+    node.querySelector('[data-field="dob"]').textContent = r.dateNaissance || '—';
+    node.querySelector('[data-field="level"]').textContent = r.niveau || '—';
+    node.querySelector('[data-field="arret"]').textContent = r.arretNom || '—';
+
+    const select = node.querySelector('[data-field="groupSelect"]');
+    select.innerHTML = '<option value="">— Choisir —</option>' +
+      AVAILABLE_GROUPS.map(g => `<option value="${g}">${g}</option>`).join('');
+    select.value = (r.groupe && r.groupe !== 'Non assigné') ? r.groupe : '';
+
+    select.addEventListener('change', async () => {
+      const val = select.value || 'Non assigné';
+      select.disabled = true;
+      try {
+        await updateDoc(doc(db, 'students', r.id), { groupe: val });
+        r.groupe = val;
+        rowRoot.classList.add('saved-flash');
+        setTimeout(() => rowRoot.classList.remove('saved-flash'), 1000);
+        document.getElementById('assignedCount').textContent =
+          allRecords.filter(x => x.groupe && x.groupe !== 'Non assigné').length;
+      } catch (e) {
+        alert("Erreur lors de l'enregistrement du groupe.");
+      } finally {
+        select.disabled = false;
+      }
+    });
+
+    container.appendChild(rowRoot);
+  });
+}
+</script>
+
+<!-- ===== Contenu de la barre latérale ===== -->
+<script>
+  (function () {
+    const SIDE_ITEMS = [
+      { href: 'admin-dashboard.html', category: 'Élèves & Scolarité', title: "Suivi des Inscriptions",
+        icon: `<path d="M9 12h6M9 16h6M9 8h6" stroke="#1B1464" stroke-width="1.8" stroke-linecap="round"/><path d="M4 19V6a2 2 0 012-2h9l5 5v10a2 2 0 01-2 2H6a2 2 0 01-2-2z" stroke="#1B1464" stroke-width="1.8" stroke-linejoin="round"/>` },
+      { href: 'liste-eleves-admis.html', category: 'Élèves & Scolarité', title: "Gestion des Élèves",
+        icon: `<path d="M22 10v6M2 10l10-5 10 5-10 5-10-5z" stroke="#F43F5E" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/><path d="M6 12v5c0 1.5 3 3 6 3s6-1.5 6-3v-5" stroke="#F43F5E" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>` },
+      { href: 'gestion-absences.html', category: 'Élèves & Scolarité', title: "Gestion des Absences",
+        icon: `<rect x="3" y="4" width="18" height="17" rx="2" stroke="#EA580C" stroke-width="1.8"/><path d="M3 9h18M8 2v4M16 2v4" stroke="#EA580C" stroke-width="1.8" stroke-linecap="round"/><path d="M9 14l2 2 4-4" stroke="#EA580C" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>` },
+      { href: 'gestion-coefficients.html', category: 'Élèves & Scolarité', title: "Coefficients",
+        icon: `<path d="M4 6h16M4 12h10M4 18h6" stroke="#5B3AA6" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/><circle cx="19" cy="18" r="2.5" stroke="#5B3AA6" stroke-width="1.8"/>` },
+      { href: 'gestion-emploi-du-temps.html', category: 'Élèves & Scolarité', title: "Emploi du Temps",
+        icon: `<rect x="3" y="4" width="18" height="17" rx="2" stroke="#0891B2" stroke-width="1.8"/><path d="M3 9h18M8 2v4M16 2v4" stroke="#0891B2" stroke-width="1.8" stroke-linecap="round"/><path d="M7.5 13h3M7.5 17h3M13.5 13h3M13.5 17h3" stroke="#0891B2" stroke-width="1.8" stroke-linecap="round"/>` },
+
+      { href: 'gestion-enseignants.html', category: 'Personnel', title: "Gestion des Enseignants",
+        icon: `<path d="M16 21v-2a4 4 0 00-4-4H6a4 4 0 00-4 4v2" stroke="#5B3AA6" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/><circle cx="9" cy="7" r="4" stroke="#5B3AA6" stroke-width="1.8"/><path d="M22 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75" stroke="#5B3AA6" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>` },
+      { href: 'gestion-personnel-administratif.html', category: 'Personnel', title: "Personnel Administratif & Soutien",
+        icon: `<path d="M20.59 13.41L13.42 20.6a2 2 0 01-2.83 0L2 12V2h10l8.59 8.59a2 2 0 010 2.82z" stroke="#D98F1F" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/><circle cx="7" cy="7" r="1.2" fill="#D98F1F"/>` },
+      { href: 'connexion-enseignant.html', category: 'Personnel', title: "Espace Enseignant",
+        icon: `<path d="M12 14l9-5-9-5-9 5 9 5z" stroke="#0D9488" stroke-width="1.8" stroke-linejoin="round"/><path d="M12 14l6.16-3.42A9 9 0 0121 12v3M6 12v5c0 1.5 2.5 3 6 3s6-1.5 6-3v-5" stroke="#0D9488" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>` },
+
+      { href: 'gestion-salaires.html', category: 'Finance', title: "Gestion des Salaires",
+        icon: `<path d="M12 1v22M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6" stroke="#10B981" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>` },
+      { href: 'gestion-paiements.html', category: 'Finance', title: "Gestion des Paiements",
+        icon: `<rect x="2" y="5" width="20" height="14" rx="2.5" stroke="#0EA5E9" stroke-width="1.8"/><path d="M2 10h20" stroke="#0EA5E9" stroke-width="1.8"/><path d="M6 15h4" stroke="#0EA5E9" stroke-width="1.8" stroke-linecap="round"/>` },
+      { href: 'depenses-diverses.html', category: 'Finance', title: "Dépenses Diverses",
+        icon: `<path d="M12 1v22M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6" stroke="#F43F5E" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" transform="rotate(180 12 12)"/>` },
+      { href: 'tableau-financier.html', category: 'Finance', title: "Tableau de Bord Financier",
+        icon: `<path d="M3 3v18h18" stroke="#D98F1F" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/><path d="M7 15l4-4 3 3 5-6" stroke="#D98F1F" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>` },
+
+      { href: 'gestion-annonces.html', category: 'Communication & Services', title: "Actualités & Annonces",
+        icon: `<path d="M4 4h16v12H7l-3 3V4z" stroke="#5B3AA6" stroke-width="1.8" stroke-linejoin="round"/><path d="M8 9h8M8 12h5" stroke="#5B3AA6" stroke-width="1.8" stroke-linecap="round"/>` },
+      { href: 'gestion-transport.html', category: 'Communication & Services', title: "Transport Scolaire",
+        icon: `<path d="M4 17h16M4 17a2 2 0 002 2h1a2 2 0 002-2M4 17V8a2 2 0 012-2h12a2 2 0 012 2v9m-4 0a2 2 0 002 2h1a2 2 0 002-2M7 17v.01M17 17v.01" stroke="#1B1464" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/><path d="M4 12h16" stroke="#1B1464" stroke-width="1.8" stroke-linecap="round"/>` },
+
+      { href: 'rapports-statistiques.html', category: 'Rapports & Statistiques', title: "Rapports & Statistiques",
+        icon: `<path d="M4 19V5M4 19h16" stroke="#6366F1" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/><rect x="7" y="12" width="3" height="7" rx="1" fill="#6366F1"/><rect x="12.5" y="8" width="3" height="11" rx="1" fill="#6366F1"/><rect x="18" y="14" width="3" height="5" rx="1" fill="#6366F1"/>` },
+    ];
+
+    const currentPage = location.pathname.split('/').pop() || 'espace-administration.html';
+    const scroll = document.getElementById('sideNavScroll');
+    let html = '';
+    let lastCategory = '';
+
+    SIDE_ITEMS.forEach(item => {
+      if (item.category !== lastCategory) {
+        html += `<div class="side-cat-label">${item.category}</div>`;
+        lastCategory = item.category;
+      }
+      const isActive = item.href === currentPage;
+      html += `
+        <a href="${item.href}" class="side-item ${isActive ? 'active' : ''}" title="${item.title}">
+          <span class="side-item-icon">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none">${item.icon}</svg>
+          </span>
+          <span class="side-item-label">${item.title}</span>
+        </a>
+      `;
+    });
+
+    scroll.innerHTML = html;
+  })();
+</script>
+
+</body>
+</html>
